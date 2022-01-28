@@ -1,10 +1,10 @@
 Package: lakehouse
-Title: What the Package Does (One Line, Title Case)
+Title: nflverse data storage
 Version: 0.0.0.9000
 Authors@R: 
     person("Tan", "Ho", , "tan@tanho.ca", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8388-5155"))
-Description: What the package does (one paragraph).
+Description: This repository holds automated data releases for nflverse projects. 
 License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true
@@ -12,3 +12,5 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports: 
     piggyback
+URL: https://github.com/tanho63/lakehouse
+BugReports: https://github.com/tanho63/lakehouse/issues
