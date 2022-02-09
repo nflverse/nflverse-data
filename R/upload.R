@@ -2,12 +2,13 @@
 #'
 #' @param files vector of filepaths to upload
 #' @param tag release name
+#' @param ... other args passed to `piggyback::pb_upload()`
 #'
 #' @export
-nflverse_upload <- function(files, tag){
+nflverse_upload <- function(files, tag, ...){
   cli::cli_alert("Uploading {length(files)} files!")
   # upload files
-  piggyback::pb_upload(files,repo = "nflverse/nflverse-data", tag = tag)
+  piggyback::pb_upload(files, repo = "nflverse/nflverse-data", tag = tag, ...)
   update_release_timestamp(tag)
 
   cli::cli_alert("Uploaded {length(files)} to nflverse/nflverse-data @ {tag} on {Sys.time()}")
@@ -17,7 +18,7 @@ update_release_timestamp <- function(tag){
   x <- tempdir()
   on.exit(unlink(file.path(x,"timestamp.txt")), add = TRUE)
   update_time <- Sys.time()
-  writeLines(update_time,file.path(x,"timestamp.txt"))
+  writeLines(as.character(update_time), file.path(x,"timestamp.txt"))
   piggyback::pb_upload("timestamp.txt", repo = "nflverse/nflverse-data", tag = tag, dir = x)
 
   current_release <- httr::GET(glue::glue("https://api.github.com/repos/nflverse/nflverse-data/releases/tags/{tag}")) |>
