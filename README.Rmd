@@ -36,13 +36,13 @@ The following table reports on the status and last update times of nflverse data
 
 update_times <- readRDS("man/data_releases.rds") |> 
   dplyr::mutate(url = glue::glue("https://github.com/nflverse/nflverse-data/releases/download/{tag}/timestamp.json"),
-         badge = glue::glue("![{tag}](https://img.shields.io/badge/dynamic/json?color=blue&label={paste0('load_',tag)}&query=last_updated&style=flat-square&url={URLencode(url)})")) |> 
+         badge = glue::glue("[![{tag}](https://img.shields.io/badge/dynamic/json?color=blue&label={paste0('load_',tag)}&query=last_updated&style=flat-square&url={URLencode(url)})](https://github.com/nflverse/nflverse-data/releases/tag/{tag})")) |> 
   dplyr::select(
     Data = tag,
     `Last Updated` = badge
   ) |> 
   dplyr::bind_rows(
-    list(Data = "pbp_raw", `Last Updated` = "![raw pbp data](https://img.shields.io/github/last-commit/nflverse/nflfastR-raw?label=Raw%20PBP%20Updated&style=flat-square)")
+    list(Data = "pbp_raw", `Last Updated` = "[![raw pbp data](https://img.shields.io/github/last-commit/nflverse/nflfastR-raw?label=Raw%20PBP%20Updated&style=flat-square)]()")
   )
 
 status <- tibble::tribble(
@@ -62,7 +62,8 @@ status <- tibble::tribble(
   "ffverse rankings", "![weekly-fantasypros](https://img.shields.io/github/workflow/status/dynastyprocess/data/weekly-fantasypros?label=rankings&style=flat-square)"
   ) |> 
   dplyr::left_join(update_times, by = "Data") |> 
-  dplyr::mutate_all(tidyr::replace_na,"")
+  dplyr::mutate_all(tidyr::replace_na,"") |> 
+  dplyr::mutate(Status = glue::glue("[{Status}]()"))
 ```
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
