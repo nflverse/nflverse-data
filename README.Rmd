@@ -54,9 +54,9 @@ status <- tibble::tribble(
   "snap_counts", "![snap_counts](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/update_snap_counts?label=snaps_status&style=flat-square)",
   "pfr_advstats", "![adv_stats](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/update_adv_stats?label=advstats_status&style=flat-square)",
   "nextgen_stats", "![ngs](https://img.shields.io/github/workflow/status/nflverse/ngs-data/update_ngs?label=ngs_status&style=flat-square)",
-  "injuries", "",
-  "depth_charts", "",
-  "combine", "",
+  "injuries", "![injuries](https://img.shields.io/github/workflow/status/nflverse/nflfastR-roster/update-injuries?label=injuries_status&style=flat-square)",
+  "depth_charts", "![depthcharts](https://img.shields.io/github/workflow/status/nflverse/nflfastR-roster/Update-Depth-Charts?label=depth_charts_status&style=flat-square)",
+  "combine", "![combine](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/Update%20Combine%20Data?label=combine_status&style=flat-square)",
   "nfl4th", "![nfl4th](https://img.shields.io/github/workflow/status/nflverse/nfl4th/update-computed-numbers?label=nfl4th_precompute&style=flat-square)",
   "ffverse player IDs", "![weekly-playerids](https://img.shields.io/github/workflow/status/dynastyprocess/data/weekly-playerids?label=ff_playerids&style=flat-square)",
   "ffverse rankings", "![weekly-fantasypros](https://img.shields.io/github/workflow/status/dynastyprocess/data/weekly-fantasypros?label=rankings&style=flat-square)"
