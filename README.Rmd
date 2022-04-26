@@ -59,7 +59,8 @@ status <- tibble::tribble(
   "combine", "![combine](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/Update%20Combine%20Data?label=combine_status&style=flat-square)",
   "nfl4th", "![nfl4th](https://img.shields.io/github/workflow/status/nflverse/nfl4th/update-computed-numbers?label=nfl4th_precompute&style=flat-square)",
   "ffverse player IDs", "![weekly-playerids](https://img.shields.io/github/workflow/status/dynastyprocess/data/weekly-playerids?label=ff_playerids&style=flat-square)",
-  "ffverse rankings", "![weekly-fantasypros](https://img.shields.io/github/workflow/status/dynastyprocess/data/weekly-fantasypros?label=rankings&style=flat-square)"
+  "ffverse rankings", "![weekly-fantasypros](https://img.shields.io/github/workflow/status/dynastyprocess/data/weekly-fantasypros?label=rankings&style=flat-square)",
+  "contracts", "![contracts](https://img.shields.io/github/workflow/status/nflverse/rotc/update_otc?label=contracts&style=flat-square)"
   ) |> 
   dplyr::left_join(update_times, by = "Data") |> 
   dplyr::mutate_all(tidyr::replace_na,"") |> 
