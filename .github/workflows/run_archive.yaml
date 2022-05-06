@@ -37,6 +37,7 @@ jobs:
           extra-packages: |
             ropensci/piggyback
             pkgload
+            nflverse/nflreadr
 
       - name: Archive all nflverse data
         run: Rscript -e 'source("dev/run_archive.R")'
