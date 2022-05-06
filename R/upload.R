@@ -63,7 +63,7 @@ nflverse_save <- function(data_frame,
   )
 
   attr(data_frame,"nflverse_type") <- nflverse_type
-  attr(data_frame,"nflverse_data") <- Sys.time()
+  attr(data_frame,"nflverse_timestamp") <- Sys.time()
 
   temp_dir <- tempdir(check = TRUE)
 
