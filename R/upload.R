@@ -35,47 +35,51 @@ update_release_timestamp <- function(tag){
 #' data to a temporary directory in all four of csv, rds, parquet, and qs formats,
 #' and then uploads to nflverse-data repository for a specified release tag.
 #'
-#' @param dataframe dataframe to save
-#' @param filename filename to upload as, without the file extension
+#' @param data_frame data_frame to save
+#' @param file_name file_name to upload as, without the file extension
 #' @param nflverse_type metadata: name/information to add to data
 #' @param release_tag name of release to upload to
 #' @param gh_token a GitHub token, defaults to gh::gh_token()
 #'
 #' @export
-nflverse_save <- function(dataframe,
-                          filename,
+nflverse_save <- function(data_frame,
+                          file_name,
                           nflverse_type,
                           release_tag,
+                          include_gz = FALSE,
                           .token = gh::gh_token()){
 
   stopifnot(
-    is.data.frame(dataframe),
-    is.character(filename),
+    is.data.frame(data_frame),
+    is.character(file_name),
     is.character(nflverse_type),
     is.character(release_tag),
     is.character(gh_token),
-    length(filename) == 1,
+    length(file_name) == 1,
     length(nflverse_type) == 1,
     length(release_tag) == 1,
     length(gh_token) == 1
   )
 
-  attr(dataframe,"nflverse_type") <- nflverse_type
-  attr(dataframe,"nflverse_data") <- Sys.time()
+  attr(data_frame,"nflverse_type") <- nflverse_type
+  attr(data_frame,"nflverse_data") <- Sys.time()
 
   temp_dir <- tempdir(check = TRUE)
 
-  saveRDS(dataframe,file.path(temp_dir,paste0(filename,".rds")))
-  data.table::fwrite(dataframe, file.path(temp_dir,paste0(filename,".csv")))
-  arrow::write_parquet(dataframe, file.path(temp_dir, paste0(filename,".parquet")))
-  qs::qsave(dataframe,
-            file.path(temp_dir,paste0(filename,".qs")),
+  saveRDS(data_frame,file.path(temp_dir,paste0(file_name,".rds")))
+  data.table::fwrite(data_frame, file.path(temp_dir,paste0(file_name,".csv")))
+  if(include_gz) data.table::fwrite(data_frame, file.path(temp_dir,paste0(file_name,".csv.gz")))
+  arrow::write_parquet(data_frame, file.path(temp_dir, paste0(file_name,".parquet")))
+  qs::qsave(data_frame,
+            file.path(temp_dir,paste0(file_name,".qs")),
             preset = "custom",
             algorithm = "zstd_stream",
             compress_level = 22,
             shuffle_control = 15)
 
-  filenames <- file.path(temp_dir, paste0(filename,c(".rds",".csv",".parquet",".qs")))
+  .filetypes <- if(include_gz) c(".rds",".csv",".csv.gz",".parquet",".qs") else c(".rds",".csv",".parquet",".qs")
 
-  nflverse_upload(filenames,tag = release_tag, .token = .token)
+  .file_names <- file.path(temp_dir, paste0(file_name,.filetypes))
+
+  nflverse_upload(.file_names,tag = release_tag, .token = .token)
 }

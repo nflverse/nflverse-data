@@ -5,17 +5,18 @@
 \title{Save files to nflverse release}
 \usage{
 nflverse_save(
-  dataframe,
-  filename,
+  data_frame,
+  file_name,
   nflverse_type,
   release_tag,
+  include_gz = FALSE,
   .token = gh::gh_token()
 )
 }
 \arguments{
-\item{dataframe}{dataframe to save}
+\item{data_frame}{data_frame to save}
 
-\item{filename}{filename to upload as, without the file extension}
+\item{file_name}{file_name to upload as, without the file extension}
 
 \item{nflverse_type}{metadata: name/information to add to data}
 
