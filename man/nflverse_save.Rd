@@ -9,8 +9,8 @@ nflverse_save(
   file_name,
   nflverse_type,
   release_tag,
-  include_gz = FALSE,
-  .token = gh::gh_token()
+  .token = gh::gh_token(),
+  include_gz = FALSE
 )
 }
 \arguments{
