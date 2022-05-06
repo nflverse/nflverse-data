@@ -1,3 +1,7 @@
+# nflversedata 0.0.4
+
+* Added `nflverse_archive()` which automates archiving the rds version of every nflverse-data release asset and pushes it to https://github.com/nflverse/nflverse-data-archives
+
 # nflversedata 0.0.3
 
 * Added `nflverse_save()` which automates saving to the four main supported file formats (csv, rds, parquet, qs) and uploading to a specified release tag.

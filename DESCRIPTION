@@ -20,7 +20,9 @@ Imports:
     piggyback (>= 0.1.2),
     arrow (>= 5.0.0),
     qs (>= 0.25.1),
-    data.table (>= 1.14.0)
+    data.table (>= 1.14.0),
+    nflreadr,
+    fs
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

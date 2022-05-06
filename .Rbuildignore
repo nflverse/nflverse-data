@@ -2,3 +2,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
+^dev$
+^.github$
