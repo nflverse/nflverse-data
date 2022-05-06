@@ -39,7 +39,7 @@ update_release_timestamp <- function(tag){
 #' @param file_name file_name to upload as, without the file extension
 #' @param nflverse_type metadata: name/information to add to data
 #' @param release_tag name of release to upload to
-#' @param gh_token a GitHub token, defaults to gh::gh_token()
+#' @param .token a GitHub token, defaults to gh::gh_token()
 #'
 #' @export
 nflverse_save <- function(data_frame,
@@ -55,11 +55,11 @@ nflverse_save <- function(data_frame,
     is.character(file_name),
     is.character(nflverse_type),
     is.character(release_tag),
-    is.character(gh_token),
+    is.character(.token),
     length(file_name) == 1,
     length(nflverse_type) == 1,
     length(release_tag) == 1,
-    length(gh_token) == 1
+    length(.token) == 1
   )
 
   attr(data_frame,"nflverse_type") <- nflverse_type
