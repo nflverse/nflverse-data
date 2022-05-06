@@ -22,7 +22,7 @@ nflverse_save(
 
 \item{release_tag}{name of release to upload to}
 
-\item{gh_token}{a GitHub token, defaults to gh::gh_token()}
+\item{.token}{a GitHub token, defaults to gh::gh_token()}
 }
 \description{
 This functions attaches nflverse attributes like type and timestamp, saves

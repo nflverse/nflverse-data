@@ -31,7 +31,7 @@ The following table reports on the status and last update times of nflverse data
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 # piggyback::pb_list() |>
 #   dplyr::filter(file_name %in% c("timestamp.json","")) |>
-#   dplyr::distinct(tag,file_name) |> 
+#   dplyr::distinct(tag,file_name) |>
 #   saveRDS("man/data_releases.rds")
 
 update_times <- readRDS("man/data_releases.rds") |> 
@@ -52,6 +52,7 @@ status <- tibble::tribble(
   "player_stats", "![pbp and ps](https://img.shields.io/github/workflow/status/nflverse/nflfastR-data/update_current_season_pbp_and_stats?label=ps_status&style=flat-square)",
   "rosters", "![rosters](https://img.shields.io/github/workflow/status/nflverse/nflfastR-roster/update_rosters?label=rosters_status&style=flat-square)",
   "snap_counts", "![snap_counts](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/update_snap_counts?label=snaps_status&style=flat-square)",
+  "draft_picks", "![snap_counts](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/update_draft_picks?label=draft_status&style=flat-square)",
   "pfr_advstats", "![adv_stats](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/update_adv_stats?label=advstats_status&style=flat-square)",
   "nextgen_stats", "![ngs](https://img.shields.io/github/workflow/status/nflverse/ngs-data/update_ngs?label=ngs_status&style=flat-square)",
   "injuries", "![injuries](https://img.shields.io/github/workflow/status/nflverse/nflfastR-roster/update-injuries?label=injuries_status&style=flat-square)",
