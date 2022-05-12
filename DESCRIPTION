@@ -1,6 +1,6 @@
 Package: nflversedata
 Title: nflverse data storage functions
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: 
     person("Tan", "Ho", , "tan@tanho.ca", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8388-5155"))
@@ -17,12 +17,14 @@ Imports:
     glue (>= 1.5.0),
     httr (>= 1.4.0),
     jsonlite (>= 1.7.0),
-    piggyback (>= 0.1.2),
+    piggyback (>= 0.1.2.9001),
     arrow (>= 5.0.0),
     qs (>= 0.25.1),
     data.table (>= 1.14.0),
     nflreadr,
     fs
+Remotes: 
+    ropensci/piggyback
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
