@@ -40,6 +40,7 @@ update_release_timestamp <- function(tag){
 #' @param nflverse_type metadata: name/information to add to data
 #' @param release_tag name of release to upload to
 #' @param .token a GitHub token, defaults to gh::gh_token()
+#' @param file_types one or more of c("rds","csv","parquet","qs","csv.gz")
 #'
 #' @export
 nflverse_save <- function(data_frame,
@@ -47,8 +48,8 @@ nflverse_save <- function(data_frame,
                           nflverse_type,
                           release_tag,
                           .token = gh::gh_token(),
-                          include_gz = FALSE
-                          ){
+                          file_types = c("rds","csv","parquet","qs")
+){
 
   stopifnot(
     is.data.frame(data_frame),
@@ -56,29 +57,36 @@ nflverse_save <- function(data_frame,
     is.character(nflverse_type),
     is.character(release_tag),
     is.character(.token),
+    is.character(file_types),
     length(file_name) == 1,
     length(nflverse_type) == 1,
     length(release_tag) == 1,
-    length(.token) == 1
+    length(.token) == 1,
+    length(file_types) >= 1
   )
 
   attr(data_frame,"nflverse_type") <- nflverse_type
   attr(data_frame,"nflverse_timestamp") <- Sys.time()
 
   temp_dir <- tempdir(check = TRUE)
+  ft <- rlang::arg_match(file_types,
+                         values = c("rds","csv","csv.gz","parquet","qs"),
+                         multiple = TRUE)
 
-  saveRDS(data_frame,file.path(temp_dir,paste0(file_name,".rds")))
-  data.table::fwrite(data_frame, file.path(temp_dir,paste0(file_name,".csv")))
-  if(include_gz) data.table::fwrite(data_frame, file.path(temp_dir,paste0(file_name,".csv.gz")))
-  arrow::write_parquet(data_frame, file.path(temp_dir, paste0(file_name,".parquet")))
-  qs::qsave(data_frame,
-            file.path(temp_dir,paste0(file_name,".qs")),
-            preset = "custom",
-            algorithm = "zstd_stream",
-            compress_level = 22,
-            shuffle_control = 15)
+  if("rds" %in% ft) saveRDS(data_frame,file.path(temp_dir,paste0(file_name,".rds")))
+  if("csv" %in% ft) data.table::fwrite(data_frame, file.path(temp_dir,paste0(file_name,".csv")))
+  if("csv.gz" %in% ft) data.table::fwrite(data_frame, file.path(temp_dir,paste0(file_name,".csv.gz")))
+  if("parquet" %in% ft) arrow::write_parquet(data_frame, file.path(temp_dir, paste0(file_name,".parquet")))
+  if("qs" %in% ft){
+    qs::qsave(data_frame,
+              file.path(temp_dir,paste0(file_name,".qs")),
+              preset = "custom",
+              algorithm = "zstd_stream",
+              compress_level = 22,
+              shuffle_control = 15)
+  }
 
-  .filetypes <- if(include_gz) c(".rds",".csv",".csv.gz",".parquet",".qs") else c(".rds",".csv",".parquet",".qs")
+  .filetypes <- paste0(".",ft)
 
   .file_names <- file.path(temp_dir, paste0(file_name,.filetypes))
 

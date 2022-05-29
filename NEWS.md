@@ -1,3 +1,7 @@
+# nflversedata 0.0.5 
+
+* Added file_types argument which takes a vector of file types and defaults to `c("csv","rds","qs","parquet")`
+
 # nflversedata 0.0.4
 
 * Added `nflverse_archive()` which automates archiving the rds version of every nflverse-data release asset and pushes it to https://github.com/nflverse/nflverse-data-archives
