@@ -12,6 +12,7 @@ nflverse_archive <- function(release_name){
     piggyback::pb_new_release(
       repo = "nflverse/nflverse-data-archives",
       tag = glue::glue("archive-{as.character(Sys.Date())}"))
+    memoise::forget(piggyback::pb_releases)
   },
   silent = TRUE)
 
