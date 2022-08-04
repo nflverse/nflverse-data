@@ -65,6 +65,10 @@ nflverse_save <- function(data_frame,
     length(file_types) >= 1
   )
 
+  if("season" %in% names(data_frame)) data_frame$season <- as.integer(data_frame$season)
+  if("week" %in% names(data_frame)) data_frame$week <- as.integer(data_frame$week)
+  
+  
   attr(data_frame,"nflverse_type") <- nflverse_type
   attr(data_frame,"nflverse_timestamp") <- Sys.time()
 
