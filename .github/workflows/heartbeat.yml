@@ -1,0 +1,21 @@
+name: heartbeat
+on:
+  schedule:
+    - cron: "0 0 1 * *"
+
+jobs:
+  heartbeat:
+    name: heartbeat
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Commit heartbeat
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          rm .heartbeat
+          date > .heartbeat
+          git add .heartbeat
+          git commit -m "Keep GHA alive `date`" || echo "No changes to commit"
+          git push || echo "No changes to commit"
+          
