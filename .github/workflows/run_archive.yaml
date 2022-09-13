@@ -1,7 +1,7 @@
 on:
   schedule:
-    # “At 15:15 on day-of-month 15 in March, June, September, and December.”
-    - cron: '15 15 15 3,6,9,12 *'
+    # “At 15:15 on day-of-month 15 every month.”
+    - cron: '15 15 15 * *'
   workflow_dispatch:
 
 name: archive_nflversedata
