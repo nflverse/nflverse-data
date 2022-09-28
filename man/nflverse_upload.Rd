@@ -4,13 +4,9 @@
 \alias{nflverse_upload}
 \title{Upload to nflverse release}
 \usage{
-nflverse_upload(files, tag, ...)
+nflverse_upload(...)
 }
 \arguments{
-\item{files}{vector of filepaths to upload}
-
-\item{tag}{release name}
-
 \item{...}{other args passed to \code{piggyback::pb_upload()}}
 }
 \description{

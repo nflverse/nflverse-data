@@ -1,19 +1,20 @@
 #' Upload to nflverse release
 #'
-#' @param files vector of filepaths to upload
-#' @param tag release name
+# @param files vector of filepaths to upload
+# @param tag release name
 #' @param ... other args passed to `piggyback::pb_upload()`
 #'
+#' @importFrom purrr insistently rate_backoff
 #' @export
-nflverse_upload <- function(files, tag, ...){
+nflverse_upload <- purrr::insistently(function(files, tag, ...){
   cli::cli_alert("Uploading {length(files)} files!")
   # upload files
   piggyback::pb_upload(files, repo = "nflverse/nflverse-data", tag = tag, ...)
   update_release_timestamp(tag)
   cli::cli_alert("Uploaded {length(files)} to nflverse/nflverse-data @ {tag} on {Sys.time()}")
-}
+}, rate = purrr::rate_backoff(pause_base = 0.05, pause_min = 1, max_times = 10))
 
-update_release_timestamp <- function(tag){
+update_release_timestamp <- purrr::insistently(function(tag){
   temp_dir <- tempdir(check = TRUE)
 
   update_time <- format(Sys.time(), tz = "America/Toronto", usetz = TRUE)
@@ -27,7 +28,7 @@ update_release_timestamp <- function(tag){
   piggyback::pb_upload(file.path(temp_dir,"timestamp.json"), repo = "nflverse/nflverse-data", tag = tag, overwrite = TRUE)
 
   invisible(NULL)
-}
+}, rate = purrr::rate_backoff(pause_base = 0.05, pause_min = 1, max_times = 10))
 
 #' Save files to nflverse release
 #'
@@ -67,8 +68,8 @@ nflverse_save <- function(data_frame,
 
   if("season" %in% names(data_frame)) data_frame$season <- as.integer(data_frame$season)
   if("week" %in% names(data_frame)) data_frame$week <- as.integer(data_frame$week)
-  
-  
+
+
   attr(data_frame,"nflverse_type") <- nflverse_type
   attr(data_frame,"nflverse_timestamp") <- Sys.time()
 

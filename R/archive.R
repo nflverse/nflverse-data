@@ -1,6 +1,6 @@
 #' Archive nflverse
 #'
-#' @param release_name
+#' @param release_name Name of the release
 #'
 #' @export
 nflverse_archive <- function(release_name){

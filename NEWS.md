@@ -1,3 +1,7 @@
+# nflversedata 0.0.7
+
+* `nflverse_upload()` uses `purrr::insistently()` to retry on failure because of random GitHub server issues. 
+
 # nflversedata 0.0.5 
 
 * Added file_types argument which takes a vector of file types and defaults to `c("csv","rds","qs","parquet")`

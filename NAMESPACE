@@ -3,3 +3,5 @@
 export(nflverse_archive)
 export(nflverse_save)
 export(nflverse_upload)
+importFrom(purrr,insistently)
+importFrom(purrr,rate_backoff)
