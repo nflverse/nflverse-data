@@ -7,7 +7,7 @@
 nflverse_archive(release_name)
 }
 \arguments{
-\item{release_name}{}
+\item{release_name}{Name of the release}
 }
 \description{
 Archive nflverse
