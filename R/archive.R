@@ -6,7 +6,7 @@
 nflverse_archive <- function(release_name){
   cli::cli_alert_info("Archiving {release_name}")
   temp_dir <- tempdir()
-  nflreadr::download_nflverse(!!release_name,folder_path = temp_dir, file_type = "rds")
+  nflreadr::nflverse_download(!!release_name,folder_path = temp_dir, file_type = "rds")
 
   try({
     piggyback::pb_new_release(
