@@ -21,9 +21,10 @@ nflverse_archive <- function(release_name){
     file.path(temp_dir,release_name,file_list),
     file.path(temp_dir,release_name, paste0(release_name,"_",file_list))
   )
-    memoise::forget(piggyback::pb_releases)
-    memoise::forget(piggyback::pb_info)
-    Sys.sleep(5)
+  memoise::forget(piggyback::pb_releases)
+  memoise::forget(piggyback:::pb_info)
+  Sys.sleep(5)
+  
   piggyback::pb_upload(
     file = list.files(file.path(temp_dir,release_name),full.names = TRUE),
     repo = "nflverse/nflverse-data-archives",
