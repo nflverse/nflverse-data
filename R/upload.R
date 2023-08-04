@@ -3,6 +3,7 @@
 #' @param files vector of filepaths to upload
 #' @param tag release name
 #' @param ... other args passed to `piggyback::pb_upload()`
+#' @param repo repository to upload to, default: `"nflverse/nflverse-data"`
 #'
 #' @export
 nflverse_upload <- function(files, tag, repo = "nflverse/nflverse-data", ...){
@@ -41,6 +42,7 @@ update_release_timestamp <- function(tag, repo = "nflverse/nflverse-data"){
 #' @param release_tag name of release to upload to
 #' @param .token a GitHub token, defaults to gh::gh_token()
 #' @param file_types one or more of c("rds","csv","parquet","qs","csv.gz")
+#' @param repo repository to upload to, default: `"nflverse/nflverse-data"`
 #'
 #' @export
 nflverse_save <- function(data_frame,
