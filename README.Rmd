@@ -48,20 +48,20 @@ update_times <- readRDS("man/data_releases.rds") |>
 status <- tibble::tribble(
   ~Data, ~ Status,
   "pbp_raw", "",
-  "pbp", "![pbp and ps](https://img.shields.io/github/workflow/status/nflverse/nflfastR-data/update_current_season_pbp_and_stats?label=pbp_status&style=flat-square)",
-  "player_stats", "![pbp and ps](https://img.shields.io/github/workflow/status/nflverse/nflfastR-data/update_current_season_pbp_and_stats?label=ps_status&style=flat-square)",
-  "rosters", "![rosters](https://img.shields.io/github/workflow/status/nflverse/nflfastR-roster/update_rosters?label=rosters_status&style=flat-square)",
-  "snap_counts", "![snap_counts](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/update_snap_counts?label=snaps_status&style=flat-square)",
-  "draft_picks", "![snap_counts](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/update_draft_picks?label=draft_status&style=flat-square)",
-  "pfr_advstats", "![adv_stats](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/update_adv_stats?label=advstats_status&style=flat-square)",
-  "nextgen_stats", "![ngs](https://img.shields.io/github/workflow/status/nflverse/ngs-data/update_ngs?label=ngs_status&style=flat-square)",
-  "injuries", "![injuries](https://img.shields.io/github/workflow/status/nflverse/nflfastR-roster/update-injuries?label=injuries_status&style=flat-square)",
-  "depth_charts", "![depthcharts](https://img.shields.io/github/workflow/status/nflverse/nflfastR-roster/Update-Depth-Charts?label=depth_charts_status&style=flat-square)",
-  "combine", "![combine](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/Update%20Combine%20Data?label=combine_status&style=flat-square)",
-  "nfl4th", "![nfl4th](https://img.shields.io/github/workflow/status/nflverse/nfl4th/update-computed-numbers?label=nfl4th_precompute&style=flat-square)",
-  "ffverse player IDs", "![weekly-playerids](https://img.shields.io/github/workflow/status/dynastyprocess/data/weekly-playerids?label=ff_playerids&style=flat-square)",
-  "ffverse rankings", "![weekly-fantasypros](https://img.shields.io/github/workflow/status/dynastyprocess/data/weekly-fantasypros?label=rankings&style=flat-square)",
-  "contracts", "![contracts](https://img.shields.io/github/workflow/status/nflverse/rotc/update_otc?label=contracts&style=flat-square)"
+  "pbp", "![pbp and ps](https://img.shields.io/github/actions/workflow/status/nflverse/nflverse-pbp/automated_pbp_update.yaml?label=pbp_status&style=flat-square)",
+  "player_stats", "![pbp and ps](https://img.shields.io/github/actions/workflow/status/nflverse/nflverse-pbp/automated_pbp_update.yaml?label=ps_status&style=flat-square)",
+  "rosters", "![rosters](https://img.shields.io/github/actions/workflow/status/nflverse/nflverse-rosters/update_rosters.yaml?label=rosters_status&style=flat-square)",
+  "snap_counts", "![snap_counts](https://img.shields.io/github/actions/workflow/status/nflverse/pfr_scrapR/update_snap_counts.yaml?label=snaps_status&style=flat-square)",
+  "draft_picks", "![snap_counts](https://img.shields.io/github/actions/workflow/status/nflverse/pfr_scrapR/update_draft_picks.yaml?label=draft_status&style=flat-square)",
+  "pfr_advstats", "![adv_stats](https://img.shields.io/github/actions/workflow/status/nflverse/pfr_scrapR/update_advanced_stats.yaml?label=advstats_status&style=flat-square)",
+  "nextgen_stats", "![ngs](https://img.shields.io/github/actions/workflow/status/nflverse/ngs-data/update_ngs.yaml?label=ngs_status&style=flat-square)",
+  "injuries", "![injuries](https://img.shields.io/github/actions/workflow/status/nflverse/nflverse-rosters/update_injuries.yaml?label=injuries_status&style=flat-square)",
+  "depth_charts", "![depthcharts](https://img.shields.io/github/actions/workflow/status/nflverse/nflverse-rosters/update_depth_charts.yaml?label=depth_charts_status&style=flat-square)",
+  "combine", "![combine](https://img.shields.io/github/actions/workflow/status/nflverse/pfr_scrapR/update_combine.yaml?label=combine_status&style=flat-square)",
+  "nfl4th", "![nfl4th](https://img.shields.io/github/actions/workflow/status/nflverse/nfl4th/update_precompute.yaml?label=nfl4th_precompute&style=flat-square)",
+  "ffverse player IDs", "![weekly-playerids](https://img.shields.io/github/actions/workflow/status/dynastyprocess/data/weekly-playerids.yml?label=ff_playerids&style=flat-square)",
+  "ffverse rankings", "![weekly-fantasypros](https://img.shields.io/github/actions/workflow/status/dynastyprocess/data/weekly-fantasypros.yml?label=rankings&style=flat-square)",
+  "contracts", "![contracts](https://img.shields.io/github/actions/workflow/status/nflverse/rotc/update_otc.yaml?label=contracts&style=flat-square)"
   ) |> 
   dplyr::left_join(update_times, by = "Data") |> 
   dplyr::mutate_all(tidyr::replace_na,"") |> 
@@ -80,45 +80,45 @@ knitr::kable(status)
 
 Raw JSON should appear 1-2 hours after each game.
 
-![pbp and ps](https://img.shields.io/github/workflow/status/nflverse/nflfastR-data/update_current_season_pbp_and_stats?label=PBP%20%26%20Player%20Stats&style=flat-square)
+![pbp and ps](https://img.shields.io/github/actions/workflow/status/nflverse/nflverse-pbp/update_current_season_pbp_and_stats?label=PBP%20%26%20Player%20Stats&style=flat-square)
 
 PBP and PS are updated at 9:00 UTC each day from September to February
 
 ### Rosters
-![rosters](https://img.shields.io/github/workflow/status/nflverse/nflfastR-roster/update_rosters?label=Rosters&style=flat-square)
+![rosters](https://img.shields.io/github/actions/workflow/status/nflverse/nflverse-rosters/update_rosters?label=Rosters&style=flat-square)
 
 Rosters are updated at 7:00 UTC each day.
 
 ### Snap Counts
-![snap_counts](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/update_snap_counts?label=Snap%20Counts&style=flat-square)
+![snap_counts](https://img.shields.io/github/actions/workflow/status/nflverse/pfr_scrapR/update_snap_counts?label=Snap%20Counts&style=flat-square)
 
 Snap counts are polled four times a day for new data.
 
 ### Advanced Pass/Rush/Rec/Def Stats
 
-![adv_stats](https://img.shields.io/github/workflow/status/nflverse/pfr_scrapR/update_adv_stats?label=PFR%20Adv%20Stats&style=flat-square)
+![adv_stats](https://img.shields.io/github/actions/workflow/status/nflverse/pfr_scrapR/update_adv_stats?label=PFR%20Adv%20Stats&style=flat-square)
 
 Advanced Stats are polled four times a day for new data.
 
 ### Next Gen Stats
 
-![ngs](https://img.shields.io/github/workflow/status/nflverse/ngs-data/update_ngs?label=NGS%20data&style=flat-square)
+![ngs](https://img.shields.io/github/actions/workflow/status/nflverse/ngs-data/update_ngs?label=NGS%20data&style=flat-square)
 
 NGS is polled every day at 7:00 UTC from September to February.
 
 ### nfl4th
 
-![nfl4th](https://img.shields.io/github/workflow/status/nflverse/nfl4th/update-computed-numbers?label=nfl4th_precompute&style=flat-square)
+![nfl4th](https://img.shields.io/github/actions/workflow/status/nflverse/nfl4th/update-computed-numbers?label=nfl4th_precompute&style=flat-square)
 
 nfl4th's precomputed numbers are rebuilt each day at 7:00 UTC from September to February.
 
 ### ffverse player IDs
-![weekly-playerids](https://img.shields.io/github/workflow/status/dynastyprocess/data/weekly-playerids?label=ff_playerids&style=flat-square)
+![weekly-playerids](https://img.shields.io/github/actions/workflow/status/dynastyprocess/data/weekly-playerids?label=ff_playerids&style=flat-square)
 
 This is updated on a weekly basis.
 
 ### ffverse rankings
-![weekly-fantasypros](https://img.shields.io/github/workflow/status/dynastyprocess/data/weekly-fantasypros?label=rankings&style=flat-square)
+![weekly-fantasypros](https://img.shields.io/github/actions/workflow/status/dynastyprocess/data/weekly-fantasypros?label=rankings&style=flat-square)
 
 This is updated on Thursdays at 7:00 pm ET. 
 
