@@ -5,15 +5,15 @@
 #' @param ... other args passed to `piggyback::pb_upload()`
 #'
 #' @export
-nflverse_upload <- function(files, tag, ...){
+nflverse_upload <- function(files, tag, repo = "nflverse/nflverse-data", ...){
   cli::cli_alert("Uploading {length(files)} files!")
   # upload files
-  piggyback::pb_upload(files, repo = "nflverse/nflverse-data", tag = tag, ...)
-  update_release_timestamp(tag)
-  cli::cli_alert("Uploaded {length(files)} to nflverse/nflverse-data @ {tag} on {Sys.time()}")
+  piggyback::pb_upload(files, repo = repo, tag = tag, ...)
+  update_release_timestamp(tag, repo = repo)
+  cli::cli_alert("Uploaded {length(files)} to {repo} @ {tag} on {Sys.time()}")
 }
 
-update_release_timestamp <- function(tag){
+update_release_timestamp <- function(tag, repo = "nflverse/nflverse-data"){
   temp_dir <- tempdir(check = TRUE)
 
   update_time <- format(Sys.time(), tz = "America/Toronto", usetz = TRUE)
@@ -23,8 +23,8 @@ update_release_timestamp <- function(tag){
     jsonlite::toJSON(auto_unbox = TRUE) |>
     writeLines(file.path(temp_dir,"timestamp.json"))
 
-  piggyback::pb_upload(file.path(temp_dir,"timestamp.txt"), repo = "nflverse/nflverse-data", tag = tag, overwrite = TRUE)
-  piggyback::pb_upload(file.path(temp_dir,"timestamp.json"), repo = "nflverse/nflverse-data", tag = tag, overwrite = TRUE)
+  piggyback::pb_upload(file.path(temp_dir,"timestamp.txt"), repo = repo, tag = tag, overwrite = TRUE)
+  piggyback::pb_upload(file.path(temp_dir,"timestamp.json"), repo = repo, tag = tag, overwrite = TRUE)
 
   invisible(NULL)
 }
@@ -48,21 +48,17 @@ nflverse_save <- function(data_frame,
                           nflverse_type,
                           release_tag,
                           .token = gh::gh_token(),
-                          file_types = c("rds","csv","parquet","qs")
-){
+                          file_types = c("rds","csv","parquet","qs"),
+                          repo = "nflverse/nflverse-data") {
 
   stopifnot(
     is.data.frame(data_frame),
-    is.character(file_name),
-    is.character(nflverse_type),
-    is.character(release_tag),
-    is.character(.token),
-    is.character(file_types),
-    length(file_name) == 1,
-    length(nflverse_type) == 1,
-    length(release_tag) == 1,
-    length(.token) == 1,
-    length(file_types) >= 1
+    is.character(file_name) && length(file_name) == 1,
+    is.character(nflverse_type) && length(nflverse_type) == 1,
+    is.character(release_tag) && length(release_tag) == 1,
+    is.character(.token) && length(.token) == 1,
+    is.character(file_types) && length(file_types) >= 1,
+    is.character(repo) && length(repo) == 1
   )
 
   if("season" %in% names(data_frame)) data_frame$season <- as.integer(data_frame$season)
@@ -93,5 +89,5 @@ nflverse_save <- function(data_frame,
 
   .file_names <- file.path(temp_dir, paste0(file_name,.filetypes))
 
-  nflverse_upload(.file_names,tag = release_tag, .token = .token)
+  nflverse_upload(.file_names,tag = release_tag, .token = .token, repo = repo)
 }
