@@ -9,10 +9,10 @@ on:
 name: archive_nflversedata
 
 jobs:
-  update_snap_counts:
+  archive_nflversedata:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.tag }}
 
     strategy:
       fail-fast: false
