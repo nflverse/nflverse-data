@@ -62,5 +62,5 @@ jobs:
             r-lib/pkgload
             nflverse/nflreadr
 
-      - name: Archive all nflverse data
+      - name: Archive nflverse release
         run: Rscript -e "source('dev/run_archive.R')"
