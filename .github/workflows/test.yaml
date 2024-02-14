@@ -10,7 +10,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.NFLVERSE_GH_TOKEN }}
     outputs:
-      releases: ${{ steps.query_releases.outputs }}
+      releases: ${{ steps.query_releases.outputs.releases }}
     steps:
 #      - name: Create Release with gh
 #        run: gh release create archive-test-$(date '+%Y-%m-%d') -R nflverse/nflverse-data-archives
