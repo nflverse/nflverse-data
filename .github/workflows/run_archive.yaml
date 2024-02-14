@@ -9,16 +9,24 @@ on:
 name: archive_nflversedata
 
 jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    name: create_release
+    env: 
+      GH_TOKEN: ${{ secrets.NFLVERSE_GH_TOKEN }}
+    steps:
+      - name: Create release with gh
+        run: gh release create archive-$(date '+%Y-%m-%d') -R nflverse/nflverse-data-archives
+    
   archive_nflversedata:
+    needs: create_release
     runs-on: ${{ matrix.config.os }}
-
     name: ${{ matrix.tag }}
-
     strategy:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-20.04,   r: 'release'}
+          - {os: ubuntu-22.04,   r: 'release'}
         tag:
           - combine
           - contracts
