@@ -12,12 +12,15 @@ jobs:
   create_release:
     runs-on: ubuntu-latest
     name: create_release
-    env: 
+    env:
       GH_TOKEN: ${{ secrets.NFLVERSE_GH_TOKEN }}
     steps:
       - name: Create release with gh
         run: gh release create archive-$(date '+%Y-%m-%d') -R nflverse/nflverse-data-archives || true
-    
+
+      # - name: Query nflverse-data release tags
+      #   run: gh release list --json tagName -R nflverse/nflverse-data || true
+
   archive_nflversedata:
     needs: create_release
     runs-on: ${{ matrix.config.os }}
