@@ -10,12 +10,12 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.NFLVERSE_GH_TOKEN }}
     outputs:
-      releases: ${{ steps.step1.outputs }}
+      releases: ${{ steps.query_releases.outputs }}
     steps:
 #      - name: Create Release with gh
 #        run: gh release create archive-test-$(date '+%Y-%m-%d') -R nflverse/nflverse-data-archives
        - id: query_releases
-         run: gh release list -R nflverse/nflverse-data --exclude-drafts --json tagName --jq '[.[].tagName]' > ${{ GITHUB_OUTPUT}}
+         run: gh release list -R nflverse/nflverse-data --exclude-drafts --json tagName --jq '[.[].tagName]' > $GITHUB_OUTPUT
   do_things:
     runs-on: ubuntu-latest
     needs: create_release
