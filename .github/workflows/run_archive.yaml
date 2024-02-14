@@ -63,5 +63,4 @@ jobs:
             nflverse/nflreadr
 
       - name: Archive all nflverse data
-        run: dev/run_archive.R
-        shell: Rscript {0}
+        run: Rscript -e "source('dev/run_archive.R')"
