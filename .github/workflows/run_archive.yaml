@@ -14,13 +14,14 @@ jobs:
     name: create_release
     env:
       GH_TOKEN: ${{ secrets.NFLVERSE_GH_TOKEN }}
+    outputs:
+      releases: ${{ steps.query_releases.outputs.releases }}
     steps:
       - name: Create release with gh
         run: gh release create archive-$(date '+%Y-%m-%d') -R nflverse/nflverse-data-archives || true
-
-      # - name: Query nflverse-data release tags
-      #   run: gh release list --json tagName -R nflverse/nflverse-data || true
-
+      - id: query_releases
+        run: echo "releases=$(gh release list -R nflverse/nflverse-data --exclude-drafts --json tagName --jq '[.[].tagName]')" > $GITHUB_OUTPUT
+  
   archive_nflversedata:
     needs: create_release
     runs-on: ${{ matrix.config.os }}
@@ -30,27 +31,7 @@ jobs:
       matrix:
         config:
           - {os: ubuntu-22.04,   r: 'release'}
-        tag:
-          - combine
-          - contracts
-          - depth_charts
-          - draft_picks
-          - espn_data
-          - ftn_charting
-          - injuries
-          - misc
-          - nextgen_stats
-          - officials
-          - pbp
-          - pbp_participation
-          - pfr_advstats
-          - player_stats
-          - players
-          - players_components
-          - rosters
-          - snap_counts
-          # - test
-          - weekly_rosters
+        tag: ${{ fromJson(needs.create_release.outputs.releases) }}
     env:
       GITHUB_PAT: ${{ secrets.NFLVERSE_GH_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
