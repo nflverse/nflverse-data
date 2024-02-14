@@ -16,7 +16,7 @@ jobs:
       GH_TOKEN: ${{ secrets.NFLVERSE_GH_TOKEN }}
     steps:
       - name: Create release with gh
-        run: gh release create archive-$(date '+%Y-%m-%d') -R nflverse/nflverse-data-archives
+        run: gh release create archive-$(date '+%Y-%m-%d') -R nflverse/nflverse-data-archives || true
     
   archive_nflversedata:
     needs: create_release
