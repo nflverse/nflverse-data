@@ -43,6 +43,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.NFLVERSE_GH_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      NFLVERSE_ARCHIVE_TAG: ${{ matrix.tag }}
 
     steps:
       - uses: actions/checkout@v3
@@ -62,7 +63,5 @@ jobs:
             nflverse/nflreadr
 
       - name: Archive all nflverse data
-        run: |
-          Sys.setenv("NFLVERSE_ARCHIVE_TAG" = ${{ matrix.tag }})
-          source("dev/run_archive.R")
+        run: dev/run_archive.R
         shell: Rscript {0}
