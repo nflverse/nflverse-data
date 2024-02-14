@@ -3,29 +3,42 @@ on:
     # At 15:15 on Thursdays every week in Sep - Jan
     - cron: '15 15 * 9-12,1 4'
     # At 15:15 on the 15th day of each month from Feb -> Aug
-    - cron: '15 15 15 2-8 *'    
+    - cron: '15 15 15 2-8 *'
   workflow_dispatch:
 
 name: archive_nflversedata
 
 jobs:
-  update_snap_counts:
+  create_release:
+    runs-on: ubuntu-latest
+    name: create_release
+    env:
+      GH_TOKEN: ${{ secrets.NFLVERSE_GH_TOKEN }}
+    outputs:
+      releases: ${{ steps.query_releases.outputs.releases }}
+    steps:
+      - name: Create release with gh
+        run: gh release create archive-$(date '+%Y-%m-%d') -R nflverse/nflverse-data-archives || true
+      - id: query_releases
+        run: echo "releases=$(gh release list -R nflverse/nflverse-data --exclude-drafts --json tagName --jq '[.[].tagName]')" > $GITHUB_OUTPUT
+  
+  archive_nflversedata:
+    needs: create_release
     runs-on: ${{ matrix.config.os }}
-
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
-
+    name: ${{ matrix.tag }}
     strategy:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-20.04,   r: 'release'}
-
+          - {os: ubuntu-22.04,   r: 'release'}
+        tag: ${{ fromJson(needs.create_release.outputs.releases) }}
     env:
       GITHUB_PAT: ${{ secrets.NFLVERSE_GH_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      NFLVERSE_ARCHIVE_TAG: ${{ matrix.tag }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: r-lib/actions/setup-r@v2
         with:
@@ -41,5 +54,5 @@ jobs:
             r-lib/pkgload
             nflverse/nflreadr
 
-      - name: Archive all nflverse data
-        run: Rscript -e 'source("dev/run_archive.R")'
+      - name: Archive nflverse release
+        run: Rscript -e "source('dev/run_archive.R')"
