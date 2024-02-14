@@ -3,7 +3,7 @@ on:
     # At 15:15 on Thursdays every week in Sep - Jan
     - cron: '15 15 * 9-12,1 4'
     # At 15:15 on the 15th day of each month from Feb -> Aug
-    - cron: '15 15 15 2-8 *'    
+    - cron: '15 15 15 2-8 *'
   workflow_dispatch:
 
 name: archive_nflversedata
@@ -19,13 +19,33 @@ jobs:
       matrix:
         config:
           - {os: ubuntu-20.04,   r: 'release'}
-
+        tag:
+          - combine
+          - contracts
+          - depth_charts
+          - draft_picks
+          - espn_data
+          - ftn_charting
+          - injuries
+          - misc
+          - nextgen_stats
+          - officials
+          - pbp
+          - pbp_participation
+          - pfr_advstats
+          - player_stats
+          - players
+          - players_components
+          - rosters
+          - snap_counts
+          # - test
+          - weekly_rosters
     env:
       GITHUB_PAT: ${{ secrets.NFLVERSE_GH_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: r-lib/actions/setup-r@v2
         with:
@@ -42,4 +62,7 @@ jobs:
             nflverse/nflreadr
 
       - name: Archive all nflverse data
-        run: Rscript -e 'source("dev/run_archive.R")'
+        run: |
+          Sys.setenv("NFLVERSE_ARCHIVE_TAG" = ${{ matrix.tag }})
+          source("dev/run_archive.R")
+        shell: Rscript {0}
