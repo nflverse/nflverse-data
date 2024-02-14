@@ -1,0 +1,14 @@
+on:
+  workflow_dispatch:
+
+name: test
+
+jobs:
+  create_release:
+    runs-on: ubuntu-22.04
+    name: create_release
+    env:
+      GITHUB_PAT: ${{ secrets.NFLVERSE_GH_TOKEN }}
+    steps:
+      - name: Create Release with gh
+        run: gh release create archive-$(date '+%Y-%m-%d') -R nflverse/nflverse-data-archives
