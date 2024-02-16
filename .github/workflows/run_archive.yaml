@@ -18,10 +18,10 @@ jobs:
       releases: ${{ steps.query_releases.outputs.releases }}
     steps:
       - name: Create release with gh
-        run: gh release create archive-$(date '+%Y-%m-%d') -R nflverse/nflverse-data-archives || true
+        run: gh release create archive-$(date '+%Y-%m-%d') -t archive-$(date '+%Y-%m-%d') -R nflverse/nflverse-data-archives || true
       - id: query_releases
         run: echo "releases=$(gh release list -R nflverse/nflverse-data --exclude-drafts --json tagName --jq '[.[].tagName]')" > $GITHUB_OUTPUT
-  
+
   archive_nflversedata:
     needs: create_release
     runs-on: ${{ matrix.config.os }}
