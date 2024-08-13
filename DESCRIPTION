@@ -1,6 +1,6 @@
 Package: nflversedata
 Title: nflverse data storage functions
-Version: 0.0.10
+Version: 0.0.11
 Authors@R: 
     person("Tan", "Ho", , "tan@tanho.ca", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8388-5155"))
