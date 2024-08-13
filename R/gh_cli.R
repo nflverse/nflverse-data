@@ -22,9 +22,19 @@ gh_cli_release_upload <- function(files,
 
   # validate file paths
   file_available <- file.exists(files)
+
+  # if files are missing, warn the user and update the files vector to keep
+  # valid file paths only. If there are no valid file paths, exit the function.
   if ( !all(file_available) ){
-    cli::cli_abort("The following file{?s} {?is/are} missing: {.path {files[!file_available]}}")
+    cli::cli_alert_warning("The following file{?s} {?is/are} missing: {.path {files[!file_available]}}")
+
+    if (all(file_available == FALSE)){
+      cli::cli_alert_warning("There's nothing left to upload. Exiting!")
+      return(invisible(FALSE))
+    }
   }
+  # keep valid file paths
+  files <- files[file_available]
 
   # Make sure the gh cli is available
   if ( !gh_cli_available() ) return(invisible(FALSE))
