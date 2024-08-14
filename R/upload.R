@@ -4,6 +4,7 @@
 #' @param tag release name
 #' @param ... currently not used
 #' @param repo repository to upload to, default: `"nflverse/nflverse-data"`
+#' @param overwrite If `TRUE` (the default) existing files will be overwritten
 #'
 #' @export
 nflverse_upload <- function(files, tag, ..., repo = "nflverse/nflverse-data", overwrite = TRUE){

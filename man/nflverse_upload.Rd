@@ -7,13 +7,15 @@
 nflverse_upload(...)
 }
 \arguments{
-\item{...}{other args passed to \code{piggyback::pb_upload()}}
+\item{...}{currently not used}
 
 \item{files}{vector of filepaths to upload}
 
 \item{tag}{release name}
 
 \item{repo}{repository to upload to, default: \code{"nflverse/nflverse-data"}}
+
+\item{overwrite}{If \code{TRUE} (the default) existing files will be overwritten}
 }
 \description{
 Upload to nflverse release
