@@ -48,7 +48,9 @@ gh_cli_release_upload <- function(files,
     if(isTRUE(overwrite)) "--clobber" else ""
   )
   # Start shell command
-  cli::cli_progress_step("Start upload of {cli::no(length(files))} file{?s}")
+  cli::cli_progress_step("Start upload of {cli::no(length(files))} file{?s} to \\
+                         {.url {paste0('https://github.com/', repo, '/releases')}} \\
+                         @ {.field {tag}}")
 
   # This command will error if any error occurs.
   shell(cli_command, mustWork = TRUE)
