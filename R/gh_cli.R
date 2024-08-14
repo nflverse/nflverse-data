@@ -6,11 +6,12 @@ gh_cli_available <- function(){
   gh_test <- try(system2("gh", stderr = TRUE, stdout = FALSE), silent = TRUE)
 
   if ( inherits(gh_test, "try-error") ){
-    cli::cli_alert_warning("The gh cli is not available on your machine!")
-    return(FALSE)
-  } else {
-    return(TRUE)
+    cli::cli_abort("The Github Command Line Interface is not available on your machine! \\
+                   Please visit {.url https://github.com/cli/cli#installation} \\
+                   for install instructions.")
   }
+
+  invisible(TRUE)
 }
 
 gh_cli_release_upload <- function(files,
