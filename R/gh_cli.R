@@ -38,7 +38,7 @@ gh_cli_release_upload <- function(files,
   files <- files[file_available]
 
   # Make sure the gh cli is available
-  if ( !gh_cli_available() ) return(invisible(FALSE))
+  gh_cli_available()
 
   # create command for the shell
   cli_command <- paste(
