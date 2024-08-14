@@ -54,7 +54,7 @@ gh_cli_release_upload <- function(files,
                          @ {.field {tag}}")
 
   # This command will error if any error occurs.
-  shell(cli_command, mustWork = TRUE)
+  system(cli_command, intern = TRUE)
 
   cli::cli_progress_done()
 
