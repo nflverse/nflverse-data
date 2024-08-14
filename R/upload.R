@@ -9,7 +9,7 @@
 #' @export
 nflverse_upload <- function(files, tag, ..., repo = "nflverse/nflverse-data", overwrite = TRUE){
   # create timestamp_files in a temp folder
-  timestamp_files <- path_to_timestamp_files()
+  timestamp_files <- create_timestamp_file()
 
   # append timestamp files to the actual files to upload
   # timestamp will be right BEFORE the upload begins instead of afterwards
@@ -19,7 +19,7 @@ nflverse_upload <- function(files, tag, ..., repo = "nflverse/nflverse-data", ov
   gh_cli_release_upload(files = files, tag = tag, repo = repo, overwrite = overwrite)
 }
 
-path_to_timestamp_files <- function(){
+create_timestamp_file <- function(){
   temp_dir <- tempdir(check = TRUE)
 
   update_time <- format(Sys.time(), tz = "America/Toronto", usetz = TRUE)
