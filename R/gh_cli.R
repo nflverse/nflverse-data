@@ -3,7 +3,7 @@
 # This functions tries the gh command in a terminal. If it errors, the gh cli
 # isn't available on the machine or at least not on the PATH variable
 gh_cli_available <- function(){
-  gh_test <- try(system2("gh", stderr = TRUE, stdout = TRUE), silent = TRUE)
+  gh_test <- try(system("gh", intern = TRUE), silent = TRUE)
 
   if ( inherits(gh_test, "try-error") ){
     cli::cli_abort("The Github Command Line Interface is not available on your machine! \\
