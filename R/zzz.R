@@ -16,11 +16,5 @@
       value = purrr::insistently(nflverse_upload, rate = retry_rate, quiet = quiet),
       envir = rlang::ns_env("nflversedata")
     )
-
-    assign(
-      x = "update_release_timestamp",
-      value = purrr::insistently(update_release_timestamp, rate = retry_rate, quiet = quiet),
-      envir = rlang::ns_env("nflversedata")
-    )
   }
 }

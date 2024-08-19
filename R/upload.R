@@ -2,19 +2,24 @@
 #'
 #' @param files vector of filepaths to upload
 #' @param tag release name
-#' @param ... other args passed to `piggyback::pb_upload()`
+#' @param ... currently not used
 #' @param repo repository to upload to, default: `"nflverse/nflverse-data"`
+#' @param overwrite If `TRUE` (the default) existing files will be overwritten
 #'
 #' @export
-nflverse_upload <- function(files, tag, repo = "nflverse/nflverse-data", ...){
-  cli::cli_alert("Uploading {length(files)} files!")
-  # upload files
-  piggyback::pb_upload(files, repo = repo, tag = tag, ...)
-  update_release_timestamp(tag, repo = repo)
-  cli::cli_alert("Uploaded {length(files)} to {repo} @ {tag} on {Sys.time()}")
+nflverse_upload <- function(files, tag, ..., repo = "nflverse/nflverse-data", overwrite = TRUE){
+  # create timestamp_files in a temp folder
+  timestamp_files <- create_timestamp_file()
+
+  # append timestamp files to the actual files to upload
+  # timestamp will be right BEFORE the upload begins instead of afterwards
+  # but it won't be released at all if the upload breaks
+  files <- c(files, timestamp_files)
+
+  gh_cli_release_upload(files = files, tag = tag, repo = repo, overwrite = overwrite)
 }
 
-update_release_timestamp <- function(tag, repo = "nflverse/nflverse-data"){
+create_timestamp_file <- function(){
   temp_dir <- tempdir(check = TRUE)
 
   update_time <- format(Sys.time(), tz = "America/Toronto", usetz = TRUE)
@@ -24,10 +29,9 @@ update_release_timestamp <- function(tag, repo = "nflverse/nflverse-data"){
     jsonlite::toJSON(auto_unbox = TRUE) |>
     writeLines(file.path(temp_dir,"timestamp.json"))
 
-  piggyback::pb_upload(file.path(temp_dir,"timestamp.txt"), repo = repo, tag = tag, overwrite = TRUE)
-  piggyback::pb_upload(file.path(temp_dir,"timestamp.json"), repo = repo, tag = tag, overwrite = TRUE)
+  timestamp_files <- file.path(temp_dir, c("timestamp.txt", "timestamp.json"))
 
-  invisible(NULL)
+  timestamp_files
 }
 
 #' Save files to nflverse release
