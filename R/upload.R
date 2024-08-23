@@ -22,7 +22,7 @@ nflverse_upload <- function(files, tag, ..., repo = "nflverse/nflverse-data", ov
 create_timestamp_file <- function(){
   temp_dir <- tempdir(check = TRUE)
 
-  update_time <- format(Sys.time(), tz = "America/Toronto", usetz = TRUE)
+  update_time <- format(Sys.time(), tz = nflreadr::nflverse_data_timezone, usetz = TRUE)
   writeLines(update_time, file.path(temp_dir, "timestamp.txt"))
 
   list(last_updated = update_time) |>
@@ -68,7 +68,7 @@ nflverse_save <- function(data_frame,
   if ("week" %in% names(data_frame)) data_frame$week <- as.integer(data_frame$week)
 
   attr(data_frame, "nflverse_type") <- nflverse_type
-  attr(data_frame, "nflverse_timestamp") <- format(Sys.time(), tz = "America/Toronto", usetz = TRUE)
+  attr(data_frame, "nflverse_timestamp") <- format(Sys.time(), tz = nflreadr::nflverse_data_timezone, usetz = TRUE)
 
   temp_dir <- tempdir(check = TRUE)
   ft <- rlang::arg_match(file_types,
