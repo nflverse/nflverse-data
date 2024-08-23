@@ -8,9 +8,7 @@ nflverse_save(
   data_frame,
   file_name,
   nflverse_type,
-  release_tag,
-  .token = gh::gh_token(),
-  file_types = c("rds", "csv", "parquet", "qs"),
+  file_types = c("rds", "csv", "parquet", "qs", "csv.gz"),
   repo = "nflverse/nflverse-data"
 )
 }
@@ -21,13 +19,11 @@ nflverse_save(
 
 \item{nflverse_type}{metadata: name/information to add to data}
 
-\item{release_tag}{name of release to upload to}
-
-\item{.token}{a GitHub token, defaults to gh::gh_token()}
-
-\item{file_types}{one or more of c("rds","csv","parquet","qs","csv.gz")}
+\item{file_types}{one or more of \verb{"rds", "csv", "parquet", "qs", "csv.gz"}}
 
 \item{repo}{repository to upload to, default: \code{"nflverse/nflverse-data"}}
+
+\item{release_tag}{name of release to upload to}
 }
 \description{
 This functions attaches nflverse attributes like type and timestamp, saves
