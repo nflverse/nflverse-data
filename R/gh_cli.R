@@ -53,8 +53,17 @@ gh_cli_release_upload <- function(files,
                          {.url {paste0('https://github.com/', repo, '/releases')}} \\
                          @ {.field {tag}}")
 
-  # This command will error if any error occurs.
-  system(cli_command, intern = TRUE)
+  # This command will error regularly on R error and also errors on warnings
+  # because some failures raise a warning only and we want workflows to fail
+  # if somethings didn't work
+  out <- purrr::quietly(system)(cli_command, intern = TRUE)
+  if (length(out$warnings)) {
+    cli::cli_abort(
+      "The GitHub cli errored with the following message: {.val {out$result}}. \\
+     Here is the R message: {.val {out$warnings}}",
+      call = NULL
+    )
+  }
 
   cli::cli_progress_done()
 
