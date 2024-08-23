@@ -44,8 +44,7 @@ create_timestamp_file <- function(){
 #' @param file_name file_name to upload as, without the file extension
 #' @param nflverse_type metadata: name/information to add to data
 #' @param release_tag name of release to upload to
-#' @param .token a GitHub token, defaults to gh::gh_token()
-#' @param file_types one or more of c("rds","csv","parquet","qs","csv.gz")
+#' @param file_types one or more of `"rds", "csv", "parquet", "qs", "csv.gz"`
 #' @param repo repository to upload to, default: `"nflverse/nflverse-data"`
 #'
 #' @export
@@ -53,10 +52,8 @@ nflverse_save <- function(data_frame,
                           file_name,
                           nflverse_type,
                           release_tag,
-                          .token = gh::gh_token(),
-                          file_types = c("rds","csv","parquet","qs"),
+                          file_types = c("rds", "csv", "parquet", "qs", "csv.gz"),
                           repo = "nflverse/nflverse-data") {
-
   stopifnot(
     is.data.frame(data_frame),
     is.character(file_name) && length(file_name) == 1,
@@ -67,33 +64,35 @@ nflverse_save <- function(data_frame,
     is.character(repo) && length(repo) == 1
   )
 
-  if("season" %in% names(data_frame)) data_frame$season <- as.integer(data_frame$season)
-  if("week" %in% names(data_frame)) data_frame$week <- as.integer(data_frame$week)
+  if ("season" %in% names(data_frame)) data_frame$season <- as.integer(data_frame$season)
+  if ("week" %in% names(data_frame)) data_frame$week <- as.integer(data_frame$week)
 
-  attr(data_frame,"nflverse_type") <- nflverse_type
-  attr(data_frame,"nflverse_timestamp") <- Sys.time()
+  attr(data_frame, "nflverse_type") <- nflverse_type
+  attr(data_frame, "nflverse_timestamp") <- format(Sys.time(), tz = "America/Toronto", usetz = TRUE)
 
   temp_dir <- tempdir(check = TRUE)
   ft <- rlang::arg_match(file_types,
-                         values = c("rds","csv","csv.gz","parquet","qs"),
-                         multiple = TRUE)
+    values = c("rds", "csv", "csv.gz", "parquet", "qs"),
+    multiple = TRUE
+  )
 
-  if("rds" %in% ft) saveRDS(data_frame,file.path(temp_dir,paste0(file_name,".rds")))
-  if("csv" %in% ft) data.table::fwrite(data_frame, file.path(temp_dir,paste0(file_name,".csv")))
-  if("csv.gz" %in% ft) data.table::fwrite(data_frame, file.path(temp_dir,paste0(file_name,".csv.gz")))
-  if("parquet" %in% ft) arrow::write_parquet(data_frame, file.path(temp_dir, paste0(file_name,".parquet")))
-  if("qs" %in% ft){
+  if ("rds" %in% ft) saveRDS(data_frame, file.path(temp_dir, paste0(file_name, ".rds")))
+  if ("csv" %in% ft) data.table::fwrite(data_frame, file.path(temp_dir, paste0(file_name, ".csv")))
+  if ("csv.gz" %in% ft) data.table::fwrite(data_frame, file.path(temp_dir, paste0(file_name, ".csv.gz")))
+  if ("parquet" %in% ft) arrow::write_parquet(data_frame, file.path(temp_dir, paste0(file_name, ".parquet")))
+  if ("qs" %in% ft) {
     qs::qsave(data_frame,
-              file.path(temp_dir,paste0(file_name,".qs")),
-              preset = "custom",
-              algorithm = "zstd_stream",
-              compress_level = 22,
-              shuffle_control = 15)
+      file.path(temp_dir, paste0(file_name, ".qs")),
+      preset = "custom",
+      algorithm = "zstd_stream",
+      compress_level = 22,
+      shuffle_control = 15
+    )
   }
 
-  .filetypes <- paste0(".",ft)
+  .filetypes <- paste0(".", ft)
 
-  .file_names <- file.path(temp_dir, paste0(file_name,.filetypes))
+  .file_names <- file.path(temp_dir, paste0(file_name, .filetypes))
 
-  nflverse_upload(.file_names,tag = release_tag, .token = .token, repo = repo)
+  nflverse_upload(.file_names, tag = release_tag, repo = repo)
 }
