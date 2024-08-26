@@ -59,7 +59,6 @@ nflverse_save <- function(data_frame,
     is.character(file_name) && length(file_name) == 1,
     is.character(nflverse_type) && length(nflverse_type) == 1,
     is.character(release_tag) && length(release_tag) == 1,
-    is.character(.token) && length(.token) == 1,
     is.character(file_types) && length(file_types) >= 1,
     is.character(repo) && length(repo) == 1
   )
