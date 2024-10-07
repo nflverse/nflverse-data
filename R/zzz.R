@@ -3,7 +3,7 @@
     pause_base <- Sys.getenv("NFLVERSE.UPLOAD.PAUSE_BASE", 0.05) |> as.numeric()
     pause_min <- Sys.getenv("NFLVERSE.UPLOAD.PAUSE_MIN", 1) |> as.numeric()
     max_times <- Sys.getenv("NFLVERSE.UPLOAD.MAX_TIMES", 10) |> as.numeric()
-    quiet <- Sys.getenv("NFLVERSE.UPLOAD.QUIET", TRUE) |> as.logical()
+    quiet <- Sys.getenv("NFLVERSE.UPLOAD.QUIET", "false") |> as.logical()
 
     retry_rate <- purrr::rate_backoff(
       pause_base = pause_base,
