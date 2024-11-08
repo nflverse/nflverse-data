@@ -39,6 +39,7 @@ jobs:
         tag: ${{ fromJson(needs.create_release.outputs.releases) }}
     env:
       GITHUB_PAT: ${{ secrets.NFLVERSE_GH_TOKEN }}
+      GH_TOKEN: ${{ secrets.NFLVERSE_GH_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
       NFLVERSE_ARCHIVE_TAG: ${{ matrix.tag }}
       NFLVERSE_ARCHIVE_TO: ${{ needs.create_release.outputs.release_tag }}

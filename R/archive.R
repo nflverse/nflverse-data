@@ -17,15 +17,12 @@ nflverse_archive <- function(release_name, archive_tag){
     file.path(temp_dir,release_name, paste0(release_name,"_",file_list))
   )
 
-  memoise::forget(piggyback::pb_releases)
-  memoise::forget(piggyback:::pb_info)
-  Sys.sleep(5)
-
-  cli::cli_alert_info("Uploading Files to {.path nflverse/nflverse-data-archives@{archive_tag}}")
-  piggyback::pb_upload(
-    file = list.files(file.path(temp_dir,release_name),full.names = TRUE),
+  # cli::cli_alert_info("Uploading Files to {.path nflverse/nflverse-data-archives@{archive_tag}}")
+  gh_cli_release_upload <- function(
+    files = list.files(file.path(temp_dir, release_name), full.names = TRUE),
+    tag = archive_tag,
     repo = "nflverse/nflverse-data-archives",
-    tag = archive_tag
+    overwrite = TRUE
   )
 
   cli::cli_alert_success("Successfully archived {release_name}")
