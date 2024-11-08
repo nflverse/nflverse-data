@@ -55,6 +55,7 @@ jobs:
         with:
           cache-version: 1
           extra-packages: |
+            local::.
             ropensci/piggyback
             nflverse/nflreadr
 
