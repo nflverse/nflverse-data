@@ -1,11 +1,10 @@
-pkgload::load_all()
-
 tag <- Sys.getenv("NFLVERSE_ARCHIVE_TAG", unset = NA_character_)
+archive_tag <- Sys.getenv("NFLVERSE_ARCHIVE_TO", unset = NA_character_)
 
-if (is.na(tag)){
+if (is.na(tag) || is.na(archive_tag)){
   cli::cli_abort("Can't find the release tag to archive!")
 } else {
-  nflversedata::nflverse_archive(release_name = tag)
+  nflversedata::nflverse_archive(release_name = tag, archive_tag = archive_tag)
 }
 
 # Create tag list for workflow file
