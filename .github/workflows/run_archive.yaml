@@ -21,7 +21,7 @@ jobs:
       - name: Create release with gh
         id: create_tag
         run: |
-          release_tag=$(date '+%Y-%m-%d')
+          release_tag=archive-$(date '+%Y-%m-%d')
           gh release create $release_tag -t $release_tag -R nflverse/nflverse-data-archives || true
           echo "release_tag=$release_tag" >> "$GITHUB_OUTPUT"
       - id: query_releases
