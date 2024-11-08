@@ -23,7 +23,7 @@ jobs:
         run: |
           release_tag=$(date '+%Y-%m-%d')
           gh release create $release_tag -t $release_tag -R nflverse/nflverse-data-archives || true
-          echo "release_tag=[$release_tag]" >> "$GITHUB_OUTPUT"
+          echo "release_tag=$release_tag" >> "$GITHUB_OUTPUT"
       - id: query_releases
         run: echo "releases=$(gh release list -R nflverse/nflverse-data --exclude-drafts --json tagName --jq '[.[].tagName]')" > $GITHUB_OUTPUT
 
@@ -37,7 +37,7 @@ jobs:
         config:
           - {os: ubuntu-22.04,   r: 'release'}
         tag: ${{ fromJson(needs.create_release.outputs.releases) }}
-        archive_tag: ${{ fromJson(needs.create_release.outputs.release_tag) }}
+        archive_tag: ${{ needs.create_release.outputs.release_tag }}
     env:
       GITHUB_PAT: ${{ secrets.NFLVERSE_GH_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
