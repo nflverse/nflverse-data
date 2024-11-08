@@ -18,7 +18,7 @@ nflverse_archive <- function(release_name, archive_tag){
   )
 
   # cli::cli_alert_info("Uploading Files to {.path nflverse/nflverse-data-archives@{archive_tag}}")
-  gh_cli_release_upload <- function(
+  gh_cli_release_upload(
     files = list.files(file.path(temp_dir, release_name), full.names = TRUE),
     tag = archive_tag,
     repo = "nflverse/nflverse-data-archives",
