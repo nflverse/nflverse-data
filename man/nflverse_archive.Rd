@@ -4,10 +4,13 @@
 \alias{nflverse_archive}
 \title{Archive nflverse}
 \usage{
-nflverse_archive(release_name)
+nflverse_archive(release_name, archive_tag)
 }
 \arguments{
 \item{release_name}{Name of the release}
+
+\item{archive_tag}{The release tag to which data from \code{release_name} should
+be uploaded}
 }
 \description{
 Archive nflverse
