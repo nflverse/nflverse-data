@@ -3,3 +3,4 @@
 export(nflverse_archive)
 export(nflverse_save)
 export(nflverse_upload)
+import(data.table)
