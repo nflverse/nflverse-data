@@ -48,24 +48,17 @@ gh_cli_release_upload <- function(files,
     "-R", repo,
     if(isTRUE(overwrite)) "--clobber" else ""
   )
-  # Start shell command
-  cli::cli_progress_step("Start upload of {cli::no(length(files))} file{?s} to \\
-                         {.url {paste0('https://github.com/', repo, '/releases')}} \\
-                         @ {.field {tag}}")
 
-  # This command will error regularly on R error and also errors on warnings
-  # because some failures raise a warning only and we want workflows to fail
-  # if somethings didn't work
-  out <- purrr::quietly(system)(cli_command, intern = TRUE)
-  if (length(out$warnings)) {
-    cli::cli_abort(
-      "The GitHub cli errored with the following message: {.val {out$result}}. \\
-     Here is the R message: {.val {out$warnings}}",
-      call = NULL
-    )
-  }
+  cli::cli_alert_info(
+    "Start upload of {cli::no(length(files))} file{?s} to \\
+    {.url {paste0('https://github.com/', repo, '/releases')}} \\
+    @ {.field {tag}}",
+    wrap = TRUE
+  )
 
-  cli::cli_progress_done()
+  cli_output <- .invoke_cli_command(cli_command = cli_command)
+
+  cli::cli_alert_success("Upload successfully completed.")
 
   invisible(TRUE)
 }
