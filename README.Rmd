@@ -51,6 +51,7 @@ status <- tibble::tribble(
   "pbp", "![pbp and ps](https://img.shields.io/github/actions/workflow/status/nflverse/nflverse-pbp/automated_pbp_update.yaml?label=pbp_status&style=flat-square)",
   "player_stats", "![pbp and ps](https://img.shields.io/github/actions/workflow/status/nflverse/nflverse-pbp/automated_pbp_update.yaml?label=ps_status&style=flat-square)",
   "rosters", "![rosters](https://img.shields.io/github/actions/workflow/status/nflverse/nflverse-rosters/update_rosters.yaml?label=rosters_status&style=flat-square)",
+  "players", "![players](https://img.shields.io/github/actions/workflow/status/nflverse/nflverse-players/update_players.yaml?label=players_status&style=flat-square)",
   "snap_counts", "![snap_counts](https://img.shields.io/github/actions/workflow/status/nflverse/pfr_scrapR/update_snap_counts.yaml?label=snaps_status&style=flat-square)",
   "draft_picks", "![snap_counts](https://img.shields.io/github/actions/workflow/status/nflverse/pfr_scrapR/update_draft_picks.yaml?label=draft_status&style=flat-square)",
   "pfr_advstats", "![adv_stats](https://img.shields.io/github/actions/workflow/status/nflverse/pfr_scrapR/update_advanced_stats.yaml?label=advstats_status&style=flat-square)",
