@@ -32,5 +32,6 @@ jobs:
             local::.
             ropensci/piggyback
             nflverse/nflreadr
+            minioclient
       - name: Run script to archive to S3
         run: Rscript dev/run_s3_archive.R

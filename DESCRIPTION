@@ -15,7 +15,6 @@ Depends:
     R (>= 4.4.0)
 Imports:
     arrow (>= 5.0.0),
-    aws.s3,
     cli (>= 3.2.0),
     data.table (>= 1.14.0),
     fs,

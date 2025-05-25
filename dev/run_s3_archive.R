@@ -1,5 +1,4 @@
 logger::log_info("JOB START")
-options(verbose = TRUE)
 print(
   nflreadr::nflverse_sitrep(
     c("nflversedata", "nflreadr", "piggyback")
@@ -11,7 +10,7 @@ purrr::walk(
   \(x) nflversedata::.nflverse_download_assets(
     release_tag = x,
     file_type = ".rds",
-    download_dir = file.path("archive", "archive", format(Sys.Date()), "rds")
+    download_dir = file.path("archive", format(Sys.Date()), "rds")
   )
 )
 
@@ -21,16 +20,20 @@ purrr::walk(
   \(x) nflversedata::.nflverse_download_assets(
     release_tag = x,
     file_type = ".parquet",
-    download_dir = file.path("archive", "archive", format(Sys.Date()), "parquet")
+    download_dir = file.path("archive", format(Sys.Date()), "parquet")
   )
 )
 
 logger::log_info("Syncing files to S3")
-aws.s3::s3sync(
-  path = "archive",
-  bucket = "nflverse",
-  region = "",
-  verbose = TRUE,
-  multipart = TRUE
+minioclient::install_mc()
+minioclient::mc_alias_set(
+  alias = "nfl_cf"
 )
+minioclient::mc_cp(
+  "archive",
+  "nfl_cf/nflverse",
+  recursive = TRUE,
+  verbose = TRUE
+)
+
 logger::log_info("JOB COMPLETE")
