@@ -24,9 +24,10 @@ purrr::walk(
   )
 )
 
-logger::log_info("Syncing files to S3 via minioclient")
+logger::log_info("Installing minioclient")
 minioclient::install_mc()
 minioclient::mc_alias_set(alias = "nfl_cf")
+logger::log_info("Syncing files to S3 via minioclient")
 
 minioclient::mc_cp(
   "archive",
