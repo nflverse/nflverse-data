@@ -6,7 +6,8 @@ on:
     - cron: '15 15 15 2-8 *'
   workflow_dispatch:
 
-name: archive_nflversedata
+name: archive_s3
+jobs:
   archive_s3:
     runs-on: ubuntu-latest
     name: archive_s3
