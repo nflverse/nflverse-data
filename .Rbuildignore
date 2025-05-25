@@ -4,4 +4,4 @@
 ^README\.Rmd$
 ^dev
 ^.github
-archive
+^archive

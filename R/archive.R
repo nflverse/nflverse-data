@@ -7,7 +7,7 @@
 #' @param file_type The file type that should be archived. In most cases this
 #' should be `".rds"`
 #' @param repo The repo we want to download assets from.
-#'
+#' @return invisible TRUE after archiving
 #' @export
 nflverse_archive <- function(release_name,
                              archive_tag,
@@ -31,6 +31,8 @@ nflverse_archive <- function(release_name,
   invisible(TRUE)
 }
 
+#' Download nflverse archive assets with gh cli
+#' @export
 .nflverse_download_assets <- function(release_tag,
                                       file_type = ".rds",
                                       download_dir = tempdir(),
