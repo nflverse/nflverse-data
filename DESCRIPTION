@@ -29,6 +29,8 @@ Imports:
     purrr (>= 0.3.4),
     qs (>= 0.25.1),
     rlang
+Suggests:
+    minioclient
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
