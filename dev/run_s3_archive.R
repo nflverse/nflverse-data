@@ -9,7 +9,7 @@ purrr::walk(
   \(x) nflversedata::.nflverse_download_assets(
     release_tag = x,
     file_type = ".rds",
-    download_dir = file.path("archive", "rds", format(Sys.Date()))
+    download_dir = file.path("archives", "archive", format(Sys.Date()), "rds")
   )
 )
 
@@ -18,12 +18,12 @@ purrr::walk(
   \(x) nflversedata::.nflverse_download_assets(
     release_tag = x,
     file_type = ".parquet",
-    download_dir = file.path("archive", "parquet", format(Sys.Date()))
+    download_dir = file.path("archives", "archive", format(Sys.Date()), "parquet")
   )
 )
 
 aws.s3::s3sync(
-  path = "archive",
+  path = "archives",
   bucket = "nflverse",
   region = "",
   direction = "upload",
