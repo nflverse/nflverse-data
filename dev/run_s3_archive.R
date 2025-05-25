@@ -1,7 +1,7 @@
 logger::log_info("JOB START")
 print(
   nflreadr::nflverse_sitrep(
-    c("nflversedata", "nflreadr", "piggyback")
+    c("nflversedata", "nflreadr", "piggyback", "minioclient")
   )
 )
 logger::log_info("Downloading rds files from nflverse-data releases")
@@ -24,11 +24,10 @@ purrr::walk(
   )
 )
 
-logger::log_info("Syncing files to S3")
+logger::log_info("Syncing files to S3 via minioclient")
 minioclient::install_mc()
-minioclient::mc_alias_set(
-  alias = "nfl_cf"
-)
+minioclient::mc_alias_set(alias = "nfl_cf")
+
 minioclient::mc_cp(
   "archive",
   "nfl_cf/nflverse",
