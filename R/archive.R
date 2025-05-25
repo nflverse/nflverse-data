@@ -35,7 +35,7 @@ nflverse_archive <- function(release_name,
                                       file_type = ".rds",
                                       repo = "nflverse/nflverse-data"){
   # Query table of assets in release tag
-  assets <- gh_cli_release_assets(tag = tag, repo = repo)
+  assets <- gh_cli_release_assets(tag = release_tag, repo = repo)
   # Filter down to file_types we want
   assets_to_load <- assets[grepl(file_type, assets$url),]
   # These are the urls we need to download the files from
