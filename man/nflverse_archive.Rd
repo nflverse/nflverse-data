@@ -4,13 +4,29 @@
 \alias{nflverse_archive}
 \title{Archive nflverse}
 \usage{
-nflverse_archive(release_name, archive_tag)
+nflverse_archive(
+  release_name,
+  archive_tag,
+  ...,
+  file_type = ".rds",
+  repo = "nflverse/nflverse-data"
+)
 }
 \arguments{
-\item{release_name}{Name of the release}
+\item{release_name}{Name of the release. Must be available in \code{repo}}
 
 \item{archive_tag}{The release tag to which data from \code{release_name} should
 be uploaded}
+
+\item{...}{Currently not in use}
+
+\item{file_type}{The file type that should be archived. In most cases this
+should be \code{".rds"}}
+
+\item{repo}{The repo we want to download assets from.}
+}
+\value{
+invisible TRUE after archiving
 }
 \description{
 Archive nflverse

@@ -7,7 +7,7 @@
 #' @param file_type The file type that should be archived. In most cases this
 #' should be `".rds"`
 #' @param repo The repo we want to download assets from.
-#'
+#' @return invisible TRUE after archiving
 #' @export
 nflverse_archive <- function(release_name,
                              archive_tag,
@@ -31,8 +31,11 @@ nflverse_archive <- function(release_name,
   invisible(TRUE)
 }
 
+#' Download nflverse archive assets with gh cli
+#' @export
 .nflverse_download_assets <- function(release_tag,
                                       file_type = ".rds",
+                                      download_dir = tempdir(),
                                       repo = "nflverse/nflverse-data"){
   # Query table of assets in release tag
   assets <- gh_cli_release_assets(tag = release_tag, repo = repo)
@@ -41,8 +44,8 @@ nflverse_archive <- function(release_name,
   # These are the urls we need to download the files from
   load_from <- assets_to_load$url
   # Create temp directory to save the assets to
-  save_dir <- file.path(tempdir(), release_tag)
-  if (!dir.exists(save_dir)) dir.create(save_dir)
+  save_dir <- file.path(download_dir, release_tag)
+  if (!dir.exists(save_dir)) dir.create(save_dir, recursive = TRUE)
   # Vector of file_paths. We need to pass this to curl multidownload
   save_to <- file.path(save_dir, assets_to_load$name)
   # Some log messages

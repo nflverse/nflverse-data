@@ -3,3 +3,5 @@
 .Rdata
 .httr-oauth
 .DS_Store
+.Renviron
+archive

@@ -1,17 +1,19 @@
 Package: nflversedata
 Title: nflverse data storage functions
-Version: 0.0.12
-Authors@R: 
+Version: 0.0.13
+Authors@R:c(
     person("Tan", "Ho", , "tan@tanho.ca", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0001-8388-5155"))
+           comment = c(ORCID = "0000-0001-8388-5155")),
+    person("Sebastian", "Carl", , "mrcaseb@gmail.com", role = "aut")
+  )
 Description: This repository holds automated data releases for nflverse
     projects and helper functions for managing the uploads.
 License: CC BY 4.0
 URL: https://github.com/nflverse/nflverse-data
 BugReports: https://github.com/nflverse/nflverse-data/issues
-Depends: 
+Depends:
     R (>= 4.4.0)
-Imports: 
+Imports:
     arrow (>= 5.0.0),
     cli (>= 3.2.0),
     data.table (>= 1.14.0),
@@ -20,12 +22,15 @@ Imports:
     glue (>= 1.5.0),
     httr (>= 1.4.0),
     jsonlite (>= 1.7.0),
+    logger,
     memoise,
     nflreadr (>= 1.3.0),
     piggyback (>= 0.1.4),
     purrr (>= 0.3.4),
     qs (>= 0.25.1),
     rlang
+Suggests:
+    minioclient
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
