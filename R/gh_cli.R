@@ -1,7 +1,8 @@
 # See cli manual at https://cli.github.com/manual/
 
-# This functions tries the gh command in a terminal. If it errors, the gh cli
-# isn't available on the machine or at least not on the PATH variable
+#' This functions tries the gh command in a terminal. If it errors, the gh cli
+#' isn't available on the machine or at least not on the PATH variable
+#' @export
 gh_cli_available <- function(){
   gh_test <- try(system("gh", intern = TRUE), silent = TRUE)
 
@@ -14,6 +15,7 @@ gh_cli_available <- function(){
   invisible(TRUE)
 }
 
+#' @export
 gh_cli_release_upload <- function(files,
                                   tag,
                                   ...,
@@ -63,6 +65,7 @@ gh_cli_release_upload <- function(files,
   invisible(TRUE)
 }
 
+#' @export
 gh_cli_release_tags <- function(repo = "nflverse/nflverse-data"){
   # see https://cli.github.com/manual/gh_release_list
 
@@ -82,6 +85,7 @@ gh_cli_release_tags <- function(repo = "nflverse/nflverse-data"){
 }
 
 #' @import data.table
+#' @export
 gh_cli_release_assets <- function(tag, ..., repo = "nflverse/nflverse-data"){
   # see https://cli.github.com/manual/gh_release_view
 
@@ -109,6 +113,7 @@ gh_cli_release_assets <- function(tag, ..., repo = "nflverse/nflverse-data"){
   ret
 }
 
+#' @export
 .invoke_cli_command <- function(cli_command){
   # This command will error regularly on R error and also errors on warnings
   # because some failures raise a warning only and we want workflows to fail
@@ -124,6 +129,7 @@ gh_cli_release_assets <- function(tag, ..., repo = "nflverse/nflverse-data"){
   out$result
 }
 
+#' @export
 .cli_parse_json <- function(cli_output){
   # regex shamelessly stolen from crayon::strip_style
   ansi_regex <-"(?:(?:\\x{001b}\\[)|\\x{009b})(?:(?:[0-9]{1,3})?(?:(?:;[0-9]{0,3})*)?[A-M|f-m])|\\x{001b}[A-M]"
