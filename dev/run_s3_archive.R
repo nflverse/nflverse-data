@@ -6,7 +6,7 @@ print(
 )
 logger::log_info("Downloading rds files from nflverse-data releases")
 purrr::walk(
-  piggyback::pb_releases("nflverse/nflverse-data")$tag_name,
+  nflversedata::gh_cli_release_tags(),
   \(x) nflversedata::.nflverse_download_assets(
     release_tag = x,
     file_type = ".rds",
