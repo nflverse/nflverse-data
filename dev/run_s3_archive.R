@@ -14,15 +14,6 @@ purrr::walk(
   )
 )
 
-logger::log_info("Downloading parquet files from nflverse-data releases")
-purrr::walk(
-  piggyback::pb_releases("nflverse/nflverse-data")$tag_name,
-  \(x) nflversedata::.nflverse_download_assets(
-    release_tag = x,
-    file_type = ".parquet",
-    download_dir = file.path("archive", format(Sys.Date()), "parquet")
-  )
-)
 
 logger::log_info("Installing minioclient")
 minioclient::install_mc()
