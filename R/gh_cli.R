@@ -114,6 +114,26 @@ gh_cli_release_assets <- function(tag, ..., repo = "nflverse/nflverse-data"){
 }
 
 #' @export
+gh_cli_rate_limits <- function(verbose = TRUE){
+  # Make sure the gh cli is available
+  gh_cli_available()
+
+  # create command for the shell
+  cli_command <- "gh api rate_limit"
+
+  cli_output <- .invoke_cli_command(cli_command = cli_command)
+
+  all_rates <- .cli_parse_json(cli_output = cli_output)
+  rate <- all_rates$rate
+
+  rate$reset_parsed <- format(as.POSIXct(rate$reset, origin = "1970-01-01", tz = "UTC"), usetz = TRUE)
+
+  if (isTRUE(verbose)) cli::cli_ul(paste0(names(rate), " : ", rate))
+
+  invisible(all_rates)
+}
+
+#' @export
 .invoke_cli_command <- function(cli_command){
   # This command will error regularly on R error and also errors on warnings
   # because some failures raise a warning only and we want workflows to fail
