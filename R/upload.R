@@ -78,7 +78,12 @@ nflverse_save <- function(data_frame,
   if ("rds" %in% ft) saveRDS(data_frame, file.path(temp_dir, paste0(file_name, ".rds")))
   if ("csv" %in% ft) data.table::fwrite(data_frame, file.path(temp_dir, paste0(file_name, ".csv")))
   if ("csv.gz" %in% ft) data.table::fwrite(data_frame, file.path(temp_dir, paste0(file_name, ".csv.gz")))
-  if ("parquet" %in% ft) arrow::write_parquet(data_frame, file.path(temp_dir, paste0(file_name, ".parquet")))
+  if ("parquet" %in% ft) {
+    d <- arrow::as_arrow_table(data_frame)
+    d$metadata$nflverse_type <- d$metadata$r$attributes$nflverse_type
+    d$metadata$nflverse_timestamp <- d$metadata$r$attributes$nflverse_timestamp
+    arrow::write_parquet(d, file.path(temp_dir, paste0(file_name, ".parquet")))
+  }
   if ("qs" %in% ft) {
     qs::qsave(data_frame,
       file.path(temp_dir, paste0(file_name, ".qs")),
