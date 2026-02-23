@@ -1,3 +1,7 @@
+# nflversedata 0.0.16
+
+* dropped qs support as the dependency was removed from CRAN on 2026-01-17. (#87)
+
 # nflversedata 0.0.7
 
 * `nflverse_upload()` uses `purrr::insistently()` to retry on failure because of random GitHub server issues. 
