@@ -9,7 +9,7 @@ nflverse_save(
   file_name,
   nflverse_type,
   release_tag,
-  file_types = c("rds", "csv", "parquet", "qs", "csv.gz"),
+  file_types = c("rds", "csv", "parquet", "csv.gz"),
   repo = "nflverse/nflverse-data"
 )
 }
@@ -22,12 +22,12 @@ nflverse_save(
 
 \item{release_tag}{name of release to upload to}
 
-\item{file_types}{one or more of \verb{"rds", "csv", "parquet", "qs", "csv.gz"}}
+\item{file_types}{one or more of \verb{"rds", "csv", "parquet", "csv.gz"}}
 
 \item{repo}{repository to upload to, default: \code{"nflverse/nflverse-data"}}
 }
 \description{
 This functions attaches nflverse attributes like type and timestamp, saves
-data to a temporary directory in all four of csv, rds, parquet, and qs formats,
+data to a temporary directory in all of csv, rds, and parquet formats,
 and then uploads to nflverse-data repository for a specified release tag.
 }

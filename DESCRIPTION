@@ -1,7 +1,7 @@
 Package: nflversedata
 Title: nflverse data storage functions
-Version: 0.0.15
-Authors@R:c(
+Version: 0.0.16
+Authors@R: c(
     person("Tan", "Ho", , "tan@tanho.ca", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8388-5155")),
     person("Sebastian", "Carl", , "mrcaseb@gmail.com", role = "aut")
@@ -27,12 +27,9 @@ Imports:
     nflreadr (>= 1.3.0),
     piggyback (>= 0.1.4),
     purrr (>= 0.3.4),
-    qs (>= 0.25.1),
     rlang
 Suggests:
     minioclient
-Remotes:
-    qsbase/qs
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
