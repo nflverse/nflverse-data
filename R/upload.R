@@ -37,14 +37,14 @@ create_timestamp_file <- function(){
 #' Save files to nflverse release
 #'
 #' This functions attaches nflverse attributes like type and timestamp, saves
-#' data to a temporary directory in all four of csv, rds, parquet, and qs formats,
+#' data to a temporary directory in all of csv, rds, and parquet formats,
 #' and then uploads to nflverse-data repository for a specified release tag.
 #'
 #' @param data_frame data_frame to save
 #' @param file_name file_name to upload as, without the file extension
 #' @param nflverse_type metadata: name/information to add to data
 #' @param release_tag name of release to upload to
-#' @param file_types one or more of `"rds", "csv", "parquet", "qs", "csv.gz"`
+#' @param file_types one or more of `"rds", "csv", "parquet", "csv.gz"`
 #' @param repo repository to upload to, default: `"nflverse/nflverse-data"`
 #'
 #' @export
@@ -52,7 +52,7 @@ nflverse_save <- function(data_frame,
                           file_name,
                           nflverse_type,
                           release_tag,
-                          file_types = c("rds", "csv", "parquet", "qs", "csv.gz"),
+                          file_types = c("rds", "csv", "parquet", "csv.gz"),
                           repo = "nflverse/nflverse-data") {
   stopifnot(
     is.data.frame(data_frame),
@@ -71,7 +71,7 @@ nflverse_save <- function(data_frame,
 
   temp_dir <- tempdir(check = TRUE)
   ft <- rlang::arg_match(file_types,
-    values = c("rds", "csv", "csv.gz", "parquet", "qs"),
+    values = c("rds", "csv", "csv.gz", "parquet"),
     multiple = TRUE
   )
 
@@ -83,15 +83,6 @@ nflverse_save <- function(data_frame,
     d$metadata$nflverse_type <- d$metadata$r$attributes$nflverse_type
     d$metadata$nflverse_timestamp <- d$metadata$r$attributes$nflverse_timestamp
     arrow::write_parquet(d, file.path(temp_dir, paste0(file_name, ".parquet")))
-  }
-  if ("qs" %in% ft) {
-    qs::qsave(data_frame,
-      file.path(temp_dir, paste0(file_name, ".qs")),
-      preset = "custom",
-      algorithm = "zstd_stream",
-      compress_level = 22,
-      shuffle_control = 15
-    )
   }
 
   .filetypes <- paste0(".", ft)
