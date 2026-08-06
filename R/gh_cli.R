@@ -114,6 +114,45 @@ gh_cli_release_assets <- function(tag, ..., repo = "nflverse/nflverse-data"){
 }
 
 #' @export
+gh_cli_release_delete_asset <- function(
+  asset_name,
+  tag,
+  ...,
+  repo = "nflverse/nflverse-data"
+) {
+  # see https://cli.github.com/manual/gh_release_delete-asset
+
+  # Make sure the gh cli is available
+  gh_cli_available()
+
+  # The gh cli can't delete more than 1 asset per call
+  stopifnot(
+    "Can't handle more than 1 tag" = length(tag) == 1,
+    "Can't handle more than 1 asset" = length(asset_name) == 1
+  )
+
+  cli::cli_progress_step(
+    "Delete {.val {asset_name}} from {.pkg {paste0(repo, '/releases')}}@{.field {tag}}"
+  )
+
+  # create command for the shell
+  cli_command <- paste(
+    "gh release delete-asset",
+    tag,
+    asset_name,
+    "-R",
+    repo,
+    "--yes"
+  )
+
+  cli_output <- .invoke_cli_command(cli_command = cli_command)
+
+  cli::cli_progress_done()
+
+  invisible(TRUE)
+}
+
+#' @export
 gh_cli_rate_limits <- function(verbose = TRUE){
   # Make sure the gh cli is available
   gh_cli_available()
