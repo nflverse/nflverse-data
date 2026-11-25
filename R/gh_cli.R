@@ -20,20 +20,21 @@ gh_cli_available <- function(){
 #' Uploads `files` to release `tag` of `repo` and retries failed uploads.
 #'
 #' Replacing an existing release asset (`overwrite = TRUE`) costs two
-#' content-creating requests (delete + upload). GitHub allows about 80 of those
-#' per minute and 500 per hour per account (secondary rate limit). After a rate
-#' limit error this function waits at least one minute, doubling up to 15
-#' minutes, and then uploads only the files that didn't make it.
+#' requests (delete + upload). Many uploads at the same moment, e.g. from a lot
+#' of parallel workflow jobs, can trigger GitHub's secondary rate limit. After a
+#' rate limit error this function waits at least one minute (as GitHub asks
+#' clients to do), doubling up to 15 minutes, and then uploads only the files
+#' that didn't make it.
 #'
 #' The behavior can be configured with environment variables:
 #' - `NFLVERSE.UPLOAD.INSIST`: `"false"` disables retries.
 #' - `NFLVERSE.UPLOAD.MAX_TIMES`: maximum number of attempts, default `6`.
 #' - `NFLVERSE.UPLOAD.QUIET`: `"true"` silences retry messages.
-#' - `NFLVERSE.UPLOAD.WRITES_PER_HOUR`: if set, pace uploads so this R session
-#'   makes no more than this many content-creating requests per hour. After an
-#'   upload, the function waits until the upload's share of the budget has
-#'   passed, so consecutive sessions (e.g. jobs with `max-parallel: 1`) stay
-#'   within the budget as well. Unset (the default) means no pacing.
+#' - `NFLVERSE.UPLOAD.WRITES_PER_HOUR`: optional. If set, pace uploads so this
+#'   R session makes no more than this many delete/upload requests per hour.
+#'   After an upload, the function waits until the upload's share of the budget
+#'   has passed. Unset (the default) means no pacing. Usually limiting the
+#'   number of parallel jobs is enough.
 #'
 #' @param files vector of file paths to upload
 #' @param tag release tag

@@ -1,7 +1,7 @@
 # nflversedata 0.0.18
 
 * `gh_cli_release_upload()` (and therefore `nflverse_upload()` and `nflverse_save()`) now retries failed uploads itself instead of wrapping `nflverse_upload()` in `purrr::insistently()`. After a GitHub rate limit error it waits at least one minute, backing off up to 15 minutes, and uploads only the files that are not in the release yet. Other errors are retried after 5 to 60 seconds. The gh cli error message is now included in the logs. `NFLVERSE.UPLOAD.INSIST`, `NFLVERSE.UPLOAD.MAX_TIMES` (now defaults to 6) and `NFLVERSE.UPLOAD.QUIET` still work, `NFLVERSE.UPLOAD.PAUSE_BASE` and `NFLVERSE.UPLOAD.PAUSE_MIN` are no longer used.
-* New environment variable `NFLVERSE.UPLOAD.WRITES_PER_HOUR` paces uploads to stay below GitHub's secondary rate limit of 500 content-creating requests per hour during large rebuilds.
+* New optional environment variable `NFLVERSE.UPLOAD.WRITES_PER_HOUR` paces uploads. It is unset by default, which means no pacing.
 * `nflverse_upload()` and `nflverse_save()` gained the argument `timestamp`. Set it to `FALSE` and call the new `nflverse_upload_timestamp()` once to avoid uploading the timestamp files with every single dataset.
 
 # nflversedata 0.0.16

@@ -32,20 +32,21 @@ Uploads \code{files} to release \code{tag} of \code{repo} and retries failed upl
 }
 \details{
 Replacing an existing release asset (\code{overwrite = TRUE}) costs two
-content-creating requests (delete + upload). GitHub allows about 80 of those
-per minute and 500 per hour per account (secondary rate limit). After a rate
-limit error this function waits at least one minute, doubling up to 15
-minutes, and then uploads only the files that didn't make it.
+requests (delete + upload). Many uploads at the same moment, e.g. from a lot
+of parallel workflow jobs, can trigger GitHub's secondary rate limit. After a
+rate limit error this function waits at least one minute (as GitHub asks
+clients to do), doubling up to 15 minutes, and then uploads only the files
+that didn't make it.
 
 The behavior can be configured with environment variables:
 \itemize{
 \item \code{NFLVERSE.UPLOAD.INSIST}: \code{"false"} disables retries.
 \item \code{NFLVERSE.UPLOAD.MAX_TIMES}: maximum number of attempts, default \code{6}.
 \item \code{NFLVERSE.UPLOAD.QUIET}: \code{"true"} silences retry messages.
-\item \code{NFLVERSE.UPLOAD.WRITES_PER_HOUR}: if set, pace uploads so this R session
-makes no more than this many content-creating requests per hour. After an
-upload, the function waits until the upload's share of the budget has
-passed, so consecutive sessions (e.g. jobs with \code{max-parallel: 1}) stay
-within the budget as well. Unset (the default) means no pacing.
+\item \code{NFLVERSE.UPLOAD.WRITES_PER_HOUR}: optional. If set, pace uploads so this
+R session makes no more than this many delete/upload requests per hour.
+After an upload, the function waits until the upload's share of the budget
+has passed. Unset (the default) means no pacing. Usually limiting the
+number of parallel jobs is enough.
 }
 }
