@@ -24,7 +24,9 @@ gh_cli_available <- function(){
 #' of parallel workflow jobs, can trigger GitHub's secondary rate limit. After a
 #' rate limit error this function waits at least one minute (as GitHub asks
 #' clients to do), doubling up to 15 minutes, and then uploads only the files
-#' that didn't make it.
+#' that didn't make it. If the primary rate limit (5,000 requests per hour) is
+#' exhausted, it waits until the limit resets. Every uploaded file costs about 3
+#' requests of the primary rate limit.
 #'
 #' The behavior can be configured with environment variables:
 #' - `NFLVERSE.UPLOAD.INSIST`: `"false"` disables retries.
@@ -106,6 +108,14 @@ gh_cli_release_upload <- function(files,
     }
 
     wait <- .upload_retry_wait(attempt, rate_limited = .is_rate_limit_error(res$output))
+    if (.is_primary_rate_limit_error(res$output)) {
+      # wait for the hourly reset (+ a few seconds), at most a bit over an hour
+      reset <- .core_rate_limit_reset()
+      if (!is.null(reset)) {
+        until_reset <- as.numeric(difftime(reset, started, units = "secs")) + 5
+        wait <- max(wait, min(until_reset, 3700))
+      }
+    }
     if (!quiet) {
       cli::cli_alert_warning(
         "Upload attempt {attempt}/{max_times} failed: {.val {res$output}}"

@@ -30,6 +30,25 @@
   grepl("rate limit|HTTP 429", output, ignore.case = TRUE)
 }
 
+# The primary rate limit (5,000 requests per hour for a user token) says
+# "API rate limit exceeded for user ID ...". Unlike the secondary rate limit, it
+# only clears when the hourly window resets.
+.is_primary_rate_limit_error <- function(output) {
+  grepl("API rate limit exceeded", output, ignore.case = TRUE)
+}
+
+# Time when the primary (core) rate limit resets, or NULL if unknown. Querying
+# rate_limit doesn't count against the primary rate limit.
+.core_rate_limit_reset <- function() {
+  out <- suppressWarnings(system2(
+    "gh", c("api", "rate_limit", "--jq", ".resources.core.reset"),
+    stdout = TRUE, stderr = FALSE
+  ))
+  reset <- suppressWarnings(as.numeric(out[1]))
+  if (length(reset) == 0 || is.na(reset)) return(NULL)
+  as.POSIXct(reset, origin = "1970-01-01", tz = "UTC")
+}
+
 # GitHub asks clients to wait at least one minute after a secondary rate limit
 # error and to back off exponentially if it keeps failing.
 # Rate limit: 60s, 120s, 240s, 480s, 900s, ...
