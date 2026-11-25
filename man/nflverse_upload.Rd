@@ -4,18 +4,31 @@
 \alias{nflverse_upload}
 \title{Upload to nflverse release}
 \usage{
-nflverse_upload(...)
+nflverse_upload(
+  files,
+  tag,
+  ...,
+  repo = "nflverse/nflverse-data",
+  overwrite = TRUE,
+  timestamp = TRUE
+)
 }
 \arguments{
-\item{...}{currently not used}
-
 \item{files}{vector of filepaths to upload}
 
 \item{tag}{release name}
 
+\item{...}{currently not used}
+
 \item{repo}{repository to upload to, default: \code{"nflverse/nflverse-data"}}
 
 \item{overwrite}{If \code{TRUE} (the default) existing files will be overwritten}
+
+\item{timestamp}{If \code{TRUE} (the default), also upload the release timestamp
+files \code{timestamp.txt} and \code{timestamp.json}. Set to \code{FALSE} when uploading
+many files to the same release in one session and call
+\code{\link[=nflverse_upload_timestamp]{nflverse_upload_timestamp()}} once at the end. Every replaced asset costs
+two requests against GitHub's secondary rate limit.}
 }
 \description{
 Upload to nflverse release

@@ -1,22 +1,7 @@
 .onLoad <- function(lib, pkg) {
-  if (Sys.getenv("NFLVERSE.UPLOAD.INSIST", "true") == "true"){
-    pause_base <- Sys.getenv("NFLVERSE.UPLOAD.PAUSE_BASE", 0.05) |> as.numeric()
-    pause_min <- Sys.getenv("NFLVERSE.UPLOAD.PAUSE_MIN", 1) |> as.numeric()
-    max_times <- Sys.getenv("NFLVERSE.UPLOAD.MAX_TIMES", 10) |> as.numeric()
-    quiet <- Sys.getenv("NFLVERSE.UPLOAD.QUIET", "false") |> as.logical()
-
-    retry_rate <- purrr::rate_backoff(
-      pause_base = pause_base,
-      pause_min = pause_min,
-      max_times = max_times
-    )
-
-    assign(
-      x = "nflverse_upload",
-      value = purrr::insistently(nflverse_upload, rate = retry_rate, quiet = quiet),
-      envir = rlang::ns_env("nflversedata")
-    )
-  }
+  # Upload retries live in gh_cli_release_upload(). They used to be done here
+  # with purrr::insistently(), which retried the whole upload within seconds
+  # and made GitHub's secondary rate limit worse.
 
   # PIGGYBACK seems to be using the GITHUB_PAT env var while the GitHub cli
   # uses GH_TOKEN. Since many of our workflows set GITHUB_PAT we catch

@@ -5,18 +5,31 @@
 #' @param ... currently not used
 #' @param repo repository to upload to, default: `"nflverse/nflverse-data"`
 #' @param overwrite If `TRUE` (the default) existing files will be overwritten
+#' @param timestamp If `TRUE` (the default), also upload the release timestamp
+#'   files `timestamp.txt` and `timestamp.json`. Set to `FALSE` when uploading
+#'   many files to the same release in one session and call
+#'   [nflverse_upload_timestamp()] once at the end. Every replaced asset costs
+#'   two requests against GitHub's secondary rate limit.
 #'
 #' @export
-nflverse_upload <- function(files, tag, ..., repo = "nflverse/nflverse-data", overwrite = TRUE){
-  # create timestamp_files in a temp folder
-  timestamp_files <- create_timestamp_file()
-
+nflverse_upload <- function(files, tag, ..., repo = "nflverse/nflverse-data", overwrite = TRUE, timestamp = TRUE){
   # append timestamp files to the actual files to upload
   # timestamp will be right BEFORE the upload begins instead of afterwards
   # but it won't be released at all if the upload breaks
-  files <- c(files, timestamp_files)
+  if (isTRUE(timestamp)) files <- c(files, create_timestamp_file())
 
   gh_cli_release_upload(files = files, tag = tag, repo = repo, overwrite = overwrite)
+}
+
+#' Upload release timestamp
+#'
+#' Uploads `timestamp.txt` and `timestamp.json` with the current time to a
+#' release. Use this after uploading several files with `timestamp = FALSE`.
+#'
+#' @inheritParams nflverse_upload
+#' @export
+nflverse_upload_timestamp <- function(tag, ..., repo = "nflverse/nflverse-data"){
+  gh_cli_release_upload(files = create_timestamp_file(), tag = tag, repo = repo, overwrite = TRUE)
 }
 
 create_timestamp_file <- function(){
@@ -46,6 +59,7 @@ create_timestamp_file <- function(){
 #' @param release_tag name of release to upload to
 #' @param file_types one or more of `"rds", "csv", "parquet", "csv.gz"`
 #' @param repo repository to upload to, default: `"nflverse/nflverse-data"`
+#' @inheritParams nflverse_upload
 #'
 #' @export
 nflverse_save <- function(data_frame,
@@ -53,7 +67,8 @@ nflverse_save <- function(data_frame,
                           nflverse_type,
                           release_tag,
                           file_types = c("rds", "csv", "parquet", "csv.gz"),
-                          repo = "nflverse/nflverse-data") {
+                          repo = "nflverse/nflverse-data",
+                          timestamp = TRUE) {
   stopifnot(
     is.data.frame(data_frame),
     is.character(file_name) && length(file_name) == 1,
@@ -89,5 +104,5 @@ nflverse_save <- function(data_frame,
 
   .file_names <- file.path(temp_dir, paste0(file_name, .filetypes))
 
-  nflverse_upload(.file_names, tag = release_tag, repo = repo)
+  nflverse_upload(.file_names, tag = release_tag, repo = repo, timestamp = timestamp)
 }
