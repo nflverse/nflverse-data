@@ -37,8 +37,7 @@ of parallel workflow jobs, can trigger GitHub's secondary rate limit. After a
 rate limit error this function waits at least one minute (as GitHub asks
 clients to do), doubling up to 15 minutes, and then uploads only the files
 that didn't make it. If the primary rate limit (5,000 requests per hour) is
-exhausted, it waits until the limit resets. Every uploaded file costs about 3
-requests of the primary rate limit.
+exhausted, it waits until the limit resets.
 
 The behavior can be configured with environment variables:
 \itemize{
