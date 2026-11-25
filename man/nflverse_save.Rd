@@ -10,7 +10,8 @@ nflverse_save(
   nflverse_type,
   release_tag,
   file_types = c("rds", "csv", "parquet", "csv.gz"),
-  repo = "nflverse/nflverse-data"
+  repo = "nflverse/nflverse-data",
+  timestamp = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,12 @@ nflverse_save(
 \item{file_types}{one or more of \verb{"rds", "csv", "parquet", "csv.gz"}}
 
 \item{repo}{repository to upload to, default: \code{"nflverse/nflverse-data"}}
+
+\item{timestamp}{If \code{TRUE} (the default), also upload the release timestamp
+files \code{timestamp.txt} and \code{timestamp.json}. Set to \code{FALSE} when uploading
+many files to the same release in one session and call
+\code{\link[=nflverse_upload_timestamp]{nflverse_upload_timestamp()}} once at the end. Every replaced asset costs
+two requests against GitHub's secondary rate limit.}
 }
 \description{
 This functions attaches nflverse attributes like type and timestamp, saves

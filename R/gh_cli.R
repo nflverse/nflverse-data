@@ -15,6 +15,36 @@ gh_cli_available <- function(){
   invisible(TRUE)
 }
 
+#' Upload files to a GitHub release with the gh cli
+#'
+#' Uploads `files` to release `tag` of `repo` and retries failed uploads.
+#'
+#' Replacing an existing release asset (`overwrite = TRUE`) costs two
+#' requests (delete + upload). Many uploads at the same moment, e.g. from a lot
+#' of parallel workflow jobs, can trigger GitHub's secondary rate limit. After a
+#' rate limit error this function waits at least one minute (as GitHub asks
+#' clients to do), doubling up to 15 minutes, and then uploads only the files
+#' that didn't make it. If the primary rate limit (5,000 requests per hour) is
+#' exhausted, it waits until the limit resets.
+#'
+#' The behavior can be configured with environment variables:
+#' - `NFLVERSE.UPLOAD.INSIST`: `"false"` disables retries.
+#' - `NFLVERSE.UPLOAD.MAX_TIMES`: maximum number of attempts, default `6`.
+#' - `NFLVERSE.UPLOAD.QUIET`: `"true"` silences retry messages.
+#' - `NFLVERSE.UPLOAD.WRITES_PER_HOUR`: optional. If set, pace uploads so this
+#'   R session makes no more than this many delete/upload requests per hour.
+#'   After an upload, the function waits until the upload's share of the budget
+#'   has passed. Unset (the default) means no pacing. Usually limiting the
+#'   number of parallel jobs is enough.
+#'
+#' @param files vector of file paths to upload
+#' @param tag release tag
+#' @param ... currently not used
+#' @param repo repository to upload to, default: `"nflverse/nflverse-data"`
+#' @param overwrite If `TRUE` (the default) existing assets are replaced
+#'
+#' @return invisible `TRUE` on success, `FALSE` if there was nothing to upload.
+#'   Errors if the upload still fails after the last attempt.
 #' @export
 gh_cli_release_upload <- function(files,
                                   tag,
@@ -42,15 +72,6 @@ gh_cli_release_upload <- function(files,
   # Make sure the gh cli is available
   gh_cli_available()
 
-  # create command for the shell
-  cli_command <- paste(
-    "gh release upload",
-    tag,
-    paste(files, collapse = " "),
-    "-R", repo,
-    if(isTRUE(overwrite)) "--clobber" else ""
-  )
-
   cli::cli_alert_info(
     "Start upload of {cli::no(length(files))} file{?s} to \\
     {.url {paste0('https://github.com/', repo, '/releases')}} \\
@@ -58,11 +79,57 @@ gh_cli_release_upload <- function(files,
     wrap = TRUE
   )
 
-  cli_output <- .invoke_cli_command(cli_command = cli_command)
+  max_times <- .upload_max_times()
+  quiet <- .upload_quiet()
+  first_start <- Sys.time()
+  to_upload <- files
 
-  cli::cli_alert_success("Upload successfully completed.")
+  for (attempt in seq_len(max_times)) {
+    started <- Sys.time()
+    res <- .gh_cli_upload(to_upload, tag = tag, repo = repo, overwrite = overwrite)
+    # delete + upload for every replaced asset
+    n_writes <- length(to_upload) * (1L + isTRUE(overwrite))
+    pace_until <- .upload_pace_until(started, n_writes)
 
-  invisible(TRUE)
+    if (res$ok) {
+      .sleep_until(pace_until, "Pacing uploads", quiet = quiet)
+      cli::cli_alert_success("Upload successfully completed.")
+      return(invisible(TRUE))
+    }
+
+    if (attempt == max_times) {
+      cli::cli_abort(
+        "The GitHub cli failed to upload {.val {basename(to_upload)}} to \\
+        {.field {tag}} after {max_times} attempt{?s}. Last message: \\
+        {.val {res$output}}",
+        call = NULL
+      )
+    }
+
+    wait <- .upload_retry_wait(attempt, rate_limited = .is_rate_limit_error(res$output))
+    if (.is_primary_rate_limit_error(res$output)) {
+      # wait for the hourly reset (+ a few seconds), at most a bit over an hour
+      reset <- .core_rate_limit_reset()
+      if (!is.null(reset)) {
+        until_reset <- as.numeric(difftime(reset, started, units = "secs")) + 5
+        wait <- max(wait, min(until_reset, 3700))
+      }
+    }
+    if (!quiet) {
+      cli::cli_alert_warning(
+        "Upload attempt {attempt}/{max_times} failed: {.val {res$output}}"
+      )
+    }
+    .sleep_until(max(started + wait, pace_until), "Waiting before retry", quiet = quiet)
+
+    # gh uploads files one by one, so some of them may have made it. Retry only
+    # the rest to avoid deleting and uploading those again.
+    to_upload <- .files_not_in_release(to_upload, tag = tag, repo = repo, since = first_start)
+    if (length(to_upload) == 0) {
+      cli::cli_alert_success("All files are in the release after all. Upload completed.")
+      return(invisible(TRUE))
+    }
+  }
 }
 
 #' @export
