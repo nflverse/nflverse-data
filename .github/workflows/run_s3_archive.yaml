@@ -31,9 +31,17 @@ jobs:
       - name: Download release files to archive
         run: Rscript dev/run_s3_archive.R
       - name: Install rclone
+        # Ubuntu's apt rclone (v1.60) fails on R2 with 501 NotImplemented,
+        # so install a pinned upstream release and verify its checksum
+        env:
+          RCLONE_VERSION: v1.76.0
         run: |
-          sudo apt-get update
-          sudo apt-get install -y rclone
+          cd "$RUNNER_TEMP"
+          zip="rclone-${RCLONE_VERSION}-linux-amd64.zip"
+          gh release download "$RCLONE_VERSION" -R rclone/rclone -p "$zip" -p SHA256SUMS
+          grep " ${zip}\$" SHA256SUMS | sha256sum --check --strict
+          unzip -q "$zip"
+          sudo install -m 0755 "${zip%.zip}/rclone" /usr/local/bin/rclone
           rclone version
       - name: Copy archive to S3 via rclone
         env:
