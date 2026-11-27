@@ -29,8 +29,6 @@ Imports:
     purrr (>= 0.3.4),
     rlang,
     stats
-Suggests:
-    minioclient
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Config/roxygen2/version: 8.1.1
