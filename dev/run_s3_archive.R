@@ -1,7 +1,7 @@
 logger::log_info("JOB START")
 print(
   nflreadr::nflverse_sitrep(
-    c("nflversedata", "nflreadr", "piggyback", "minioclient")
+    c("nflversedata", "nflreadr", "piggyback")
   )
 )
 logger::log_info("Downloading rds files from nflverse-data releases")
@@ -14,17 +14,5 @@ purrr::walk(
   )
 )
 
-
-logger::log_info("Installing minioclient")
-minioclient::install_mc()
-minioclient::mc_alias_set(alias = "nfl_cf")
-logger::log_info("Syncing files to S3 via minioclient")
-
-minioclient::mc_cp(
-  "archive",
-  "nfl_cf/nflverse",
-  recursive = TRUE,
-  verbose = TRUE
-)
-
+# Upload to S3 happens in the workflow's rclone step
 logger::log_info("JOB COMPLETE")
