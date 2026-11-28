@@ -8,54 +8,72 @@ on:
 
 name: archive_nflversedata
 
+# Copies every nflverse-data release into a dated release of
+# nflverse-data-archives. Tokens: write access to nflverse-data-archives only,
+# minted after setup (which installs unpinned GitHub code). nflverse-data is
+# public, so the same token reads it. See https://github.com/nflverse/actions
+permissions:
+  contents: read
+
 jobs:
   create_release:
     runs-on: ubuntu-latest
     name: create_release
-    env:
-      GH_TOKEN: ${{ secrets.NFLVERSE_GH_TOKEN }}
     outputs:
       releases: ${{ steps.query_releases.outputs.releases }}
       release_tag: ${{ steps.create_tag.outputs.release_tag }}
     steps:
+      - id: archive-token
+        uses: nflverse/actions/app-token@v1
+        with:
+          client-id: ${{ vars.NFLVERSE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.NFLVERSE_APP_PRIVATE_KEY }}
+          repositories: nflverse-data-archives
+          contents: write
+
       - name: Create release with gh
         id: create_tag
+        env:
+          GH_TOKEN: ${{ steps.archive-token.outputs.token }}
         run: |
           release_tag=archive-$(date '+%Y-%m-%d')
           gh release create $release_tag -t $release_tag -R nflverse/nflverse-data-archives || true
           echo "release_tag=$release_tag" >> "$GITHUB_OUTPUT"
+
       - id: query_releases
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: echo "releases=$(gh release list -R nflverse/nflverse-data --exclude-drafts --json tagName --jq '[.[].tagName]')" > $GITHUB_OUTPUT
 
   archive_nflversedata:
     needs: create_release
-    runs-on: ${{ matrix.config.os }}
+    runs-on: ubuntu-latest
+    container: ghcr.io/nflverse/r-runner:latest
     name: Archive ${{ matrix.tag }} under ${{ needs.create_release.outputs.release_tag }}
     strategy:
       max-parallel: 8
       fail-fast: false
       matrix:
-        config:
-          - {os: ubuntu-22.04,   r: 'release'}
         tag: ${{ fromJson(needs.create_release.outputs.releases) }}
     env:
-      GITHUB_PAT: ${{ secrets.NFLVERSE_GH_TOKEN }}
-      GH_TOKEN: ${{ secrets.NFLVERSE_GH_TOKEN }}
-      R_KEEP_PKG_SOURCE: yes
       NFLVERSE_ARCHIVE_TAG: ${{ matrix.tag }}
       NFLVERSE_ARCHIVE_TO: ${{ needs.create_release.outputs.release_tag }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: r-lib/actions/setup-r@v2
+      - uses: nflverse/actions/setup@v1
         with:
-          r-version: ${{ matrix.config.r }}
-          use-public-rspm: true
-      - uses: r-lib/actions/setup-r-dependencies@v2
+          packages: nflverse/nflreadr ropensci/piggyback
+          install-local: true
+
+      - id: archive-token
+        uses: nflverse/actions/app-token@v1
         with:
-          cache-version: 1
-          extra-packages: |
-            local::.
-            ropensci/piggyback
-            nflverse/nflreadr
+          client-id: ${{ vars.NFLVERSE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.NFLVERSE_APP_PRIVATE_KEY }}
+          repositories: nflverse-data-archives
+          contents: write
+
       - name: Archive nflverse release ${{ matrix.tag }}
         run: Rscript dev/run_archive.R
+        env:
+          # gh cli: download from nflverse-data, upload to nflverse-data-archives
+          GH_TOKEN: ${{ steps.archive-token.outputs.token }}

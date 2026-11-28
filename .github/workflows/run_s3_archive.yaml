@@ -7,43 +7,32 @@ on:
   workflow_dispatch:
 
 name: archive_s3
+
+# Downloads all rds files of the public nflverse-data releases and copies
+# them to Cloudflare R2. Writes nothing to GitHub: no app token needed.
+permissions:
+  contents: read
+
 jobs:
   archive_s3:
     runs-on: ubuntu-latest
+    container: ghcr.io/nflverse/r-runner:latest
     name: archive_s3
-    env:
-      GITHUB_PAT: ${{ secrets.NFLVERSE_GH_TOKEN }}
-      GH_TOKEN: ${{ secrets.NFLVERSE_GH_TOKEN }}
-      R_KEEP_PKG_SOURCE: yes
-
     steps:
-      - uses: actions/checkout@v7
-      - uses: r-lib/actions/setup-r@v2
+      - uses: nflverse/actions/setup@v1
         with:
-          r-version: release
-          use-public-rspm: true
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: |
-            local::.
-            ropensci/piggyback
-            nflverse/nflreadr
+          packages: nflverse/nflreadr ropensci/piggyback
+          install-local: true
+
       - name: Download release files to archive
         run: Rscript dev/run_s3_archive.R
-      - name: Install rclone
-        # Ubuntu's apt rclone (v1.60) fails on R2 with 501 NotImplemented,
-        # so install a pinned upstream release and verify its checksum
         env:
-          # Not RCLONE_*: rclone reads those env vars as flags
-          PINNED_RCLONE: v1.76.0
-        run: |
-          cd "$RUNNER_TEMP"
-          zip="rclone-${PINNED_RCLONE}-linux-amd64.zip"
-          gh release download "$PINNED_RCLONE" -R rclone/rclone -p "$zip" -p SHA256SUMS
-          grep " ${zip}\$" SHA256SUMS | sha256sum --check --strict
-          unzip -q "$zip"
-          sudo install -m 0755 "${zip%.zip}/rclone" /usr/local/bin/rclone
-          rclone version
+          # gh cli downloads from the public nflverse-data releases
+          GH_TOKEN: ${{ github.token }}
+
+      # Ubuntu's apt rclone (v1.60) fails on R2 with 501 NotImplemented
+      - uses: nflverse/actions/install-rclone@v1
+
       - name: Copy archive to S3 via rclone
         env:
           RCLONE_CONFIG_NFLCF_TYPE: s3
